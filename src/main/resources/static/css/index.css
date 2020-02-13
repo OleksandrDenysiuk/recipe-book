@@ -1,0 +1,15 @@
+.hello-card {
+    margin-left: auto;
+    margin-right: auto;
+    width: 45%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hello-card img{
+    padding-top: 10px;
+    width: 35%;
+    height: 35%;
+}
