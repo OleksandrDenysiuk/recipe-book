@@ -19,6 +19,8 @@ public class Recipe extends BaseEntity{
 
     private String description;
 
+    private int cookTime;
+
     @OneToMany(mappedBy = "recipe")
     private Set<Ingredient> ingredients = new HashSet<>();
 
