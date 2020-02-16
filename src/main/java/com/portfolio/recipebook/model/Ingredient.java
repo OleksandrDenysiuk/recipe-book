@@ -18,10 +18,11 @@ public class Ingredient extends BaseEntity{
 
     private int amount;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 
     @Enumerated(EnumType.STRING)
     private MeasureOfIngredient measure;
+
 }
