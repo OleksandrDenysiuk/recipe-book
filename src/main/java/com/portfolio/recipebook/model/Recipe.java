@@ -21,7 +21,7 @@ public class Recipe extends BaseEntity{
 
     private int cookTime;
 
-    @OneToMany(mappedBy = "recipe")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients = new HashSet<>();
 
     @Lob
@@ -30,6 +30,6 @@ public class Recipe extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
-    @OneToOne(mappedBy = "recipe")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Manual manual;
 }
