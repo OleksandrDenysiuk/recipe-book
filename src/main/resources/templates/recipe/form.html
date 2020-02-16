@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{ :: body}, 'createRecipe')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Creating or updating form for recipe</title>
+</head>
+<body>
+<div class="container">
+
+    <h1 class="title">New recipe</h1>
+
+    <form th:object="${recipe}" class="form" method="post" th:action="@{/recipe/saveOrUpdate}" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+        <div class="form-group">
+            <label for="titleRecipe">Title</label>
+            <input th:field="*{title}" type="text" class="form-control" id="titleRecipe" placeholder="Example">
+        </div>
+        <div class="form-group">
+            <label for="descriptionRecipe">Description</label>
+            <textarea th:field="*{description}" class="form-control" id="descriptionRecipe" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="imageRecipe">Choose image</label>
+            <input name="imageRecipe" type="file" class="form-control-file" id="imageRecipe">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="exampleFormControlSelect1">Difficulty</label>
+                <select th:field="*{difficulty}" class="form-control" id="exampleFormControlSelect1">
+                    <option th:each="difficulty : ${T(com.portfolio.recipebook.model.Difficulty).values()}"
+                    th:value="${difficulty}" th:text="${difficulty}"></option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="cookTimeRecipe">Cook time</label>
+                <div class="input-group">
+                    <input th:field="*{cookTime}" type="text" class="form-control" id="cookTimeRecipe" placeholder="Example">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">min</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Next step</button>
+    </form>
+</div>
+</body>
+</html>
