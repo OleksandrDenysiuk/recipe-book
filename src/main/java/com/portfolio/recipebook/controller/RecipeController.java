@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Slf4j
 @Controller
@@ -26,30 +27,65 @@ public class RecipeController {
 
 
     @GetMapping("/all")
-    public String viewRecipesList(Model model) {
+    public String viewList(Model model) {
 
-    model.addAttribute("recipes", recipeService.findAll());
+        model.addAttribute("recipes", recipeService.findAll());
         return "recipe/list";
     }
 
+    @GetMapping("/{id}/details")
+    public String viewDetails(@PathVariable("id") Recipe recipe, Model model) {
+        model.addAttribute("recipe", recipe);
+        return "recipe/index";
+    }
+
     @GetMapping("/new")
-    public String viewForm(Model model){
+    public String viewForm(Model model) {
         model.addAttribute("recipe", new Recipe());
         return "recipe/form";
     }
 
-    @PostMapping("/new")
-    public String createRecipe(@Valid @ModelAttribute("recipe")Recipe recipe,
-                               @RequestParam("imageRecipe") MultipartFile image,
-                               BindingResult result){
-        if(result.hasErrors()){
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable("id") Recipe recipe, Model model) {
+        model.addAttribute("recipe", recipe);
+        return "recipe/form";
+    }
+
+    @PostMapping("/saveOrUpdate")
+    public String createOrUpdate(@Valid @ModelAttribute("recipe") Recipe recipe,
+                                 @RequestParam("imageRecipe") MultipartFile image,
+                                 BindingResult result) {
+
+        if (result.hasErrors()) {
             result.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
         }
 
-        imageService.saveImageFile(recipe,image);
+        try {
+            if (recipe.getId() != null) {
+                Byte[] currentImage = recipeService.findById(recipe.getId()).getImage();
+                if (image.getBytes().length != 0) {
+                    imageService.saveImageFile(recipe, image);
+                } else {
+                    recipe.setImage(currentImage);
+                }
+            } else {
+                imageService.saveImageFile(recipe, image);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Recipe savedRecipe = recipeService.save(recipe);
         return "redirect:/recipe/" + savedRecipe.getId() + "/ingredients";
+    }
+
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable("id")Recipe recipe){
+
+        recipeService.delete(recipe);
+
+        return "redirect:/recipe/all";
     }
 }
