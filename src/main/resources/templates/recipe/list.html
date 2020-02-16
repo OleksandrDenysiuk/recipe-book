@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{ :: body}, 'recipeList')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes List</title>
+</head>
+<body>
+<div class="container">
+    <div class="d-flex mt-5 mb-3">
+        <div class="mr-auto p-2">
+            <h1>All my recipes!</h1>
+        </div>
+        <div class="p-2">
+            <button type="button" class="btn btn-outline-primary btn-lg" onclick="location.href='/recipe/new'">New
+                recipe
+            </button>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div th:object="${recipe}" th:each="recipe : ${recipes}" class="col-md-6">
+            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <h3 class="mb-0" th:text="*{title}">Title</h3>
+                    <strong class="d-inline-block mb-2 text-primary" th:text="*{difficulty}">Difficulty</strong>
+                    <div class="mb-1 text-muted" th:text="*{cookTime}">Cook time</div>
+                    <p class="card-text mb-auto" th:text="*{description}">Description description description
+                        description description
+                        description description description description description.</p>
+                    <a th:href="@{/recipe/__${recipe.id}__/details}" class="stretched-link">View details</a>
+                </div>
+                <div class="col-auto d-none d-lg-block recipe-list-image">
+                    <img class="recipe-list-image" th:src="@{'/recipe/' + ${recipe.id} + '/image'}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
