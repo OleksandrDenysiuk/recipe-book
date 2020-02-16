@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{ :: body}, 'manualIndexAndFormStep')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual</title>
+</head>
+<body>
+<div class="container">
+
+    <h1 class="title text-center">How to cook it</h1>
+    <br/>
+    <p class="text-center">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
+                aria-expanded="false" aria-controls="collapseExample">
+            New step
+        </button>
+    </p>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            <form th:object="${step}" method="post" th:action="@{/recipe/__${recipe.id}__/manual/step/new}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="descriptionStep">Description</label>
+                    <textarea th:field="*{description}" class="form-control" id="descriptionStep" rows="3"></textarea>
+                </div>
+                <div class="custom-file mb-3">
+                    <input name="imageStep"  type="file" class="custom-file-input" id="customImage">
+                    <label class="custom-file-label" for="customImage">Choose image</label>
+                </div>
+                <br/>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+    <table th:object="${recipe}" th:else="*{manual != null}" class="table table-striped list-ingredients">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Image</th>
+            <th scope="col">Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="step : *{manual.steps}">
+            <th scope="row" th:text="${step.id}"></th>
+            <td><img class="recipe-image" th:src="@{'/step/' + ${step.id} + '/image'}"></td>
+            <td th:text="${step.description}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <h2 class="text-muted text-center" th:if="${recipe.manual.steps.size() == 0}">
+        List is Empty
+    </h2>
+    <a class="btn btn-primary mb-5" th:href="@{/recipe/__${recipe.id}__/ingredients}" role="button">Previous</a>
+    <a class="btn btn-primary mb-5" th:href="@{/recipe/all}" role="button">Save recipe</a>
+</div>
+</body>
+</html>
