@@ -1,0 +1,9 @@
+.form, .title{
+    padding-right: 10%;
+    padding-left: 10%;
+}
+
+.title{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

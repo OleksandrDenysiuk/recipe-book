@@ -13,3 +13,10 @@
     width: 35%;
     height: 35%;
 }
+
+.container-shadow{
+    -webkit-box-shadow: 1px 0px 29px -9px rgba(186,186,186,1);
+    -moz-box-shadow: 1px 0px 29px -9px rgba(186,186,186,1);
+    box-shadow: 1px 0px 29px -9px rgba(186,186,186,1);
+    border-radius: 12px;
+}

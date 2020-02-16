@@ -1,0 +1,11 @@
+.recipe-list-image{
+    width: 200px;
+    height: 250px;
+    object-fit: cover;
+}
+
+.recipe-image{
+    width: 320px;
+    height: 220px;
+    object-fit: cover;
+}
