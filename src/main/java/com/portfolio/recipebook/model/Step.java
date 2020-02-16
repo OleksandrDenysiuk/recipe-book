@@ -18,7 +18,7 @@ public class Step extends BaseEntity{
 
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "manual_id", nullable = false)
     private Manual manual;
 }
