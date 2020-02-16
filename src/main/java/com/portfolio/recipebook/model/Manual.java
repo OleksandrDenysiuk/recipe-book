@@ -15,10 +15,12 @@ import java.util.Set;
 @Table(name = "manuals")
 public class Manual extends BaseEntity{
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    @OneToMany(mappedBy = "manual")
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            mappedBy = "manual")
     Set<Step> steps = new HashSet<>();
 }
