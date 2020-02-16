@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{ :: body}, 'indexRecipe')}">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe details</title>
+</head>
+<body>
+<div class="col-md-6 blog-main mr-auto ml-auto pt-4">
+    <div class="text-center mb-4">
+        <button type="button" class="btn btn-primary d-inline-block"  onclick="location.href='/recipe/all'">Home</button>
+        <button type="button" class="btn btn btn-outline-primary d-inline-block"  th:onclick="'location.href=\'/recipe/' + ${recipe.id} + '/edit\''">Edit</button>
+        <button type="button" class="btn btn-outline-danger" th:onclick="'location.href=\'/recipe/' + ${recipe.id} + '/delete\''">Delete</button>
+    </div>
+    <div class="blog-post" th:object="${recipe}">
+        <div class="d-inline-block">
+            <h1 class="blog-post-title" th:text="*{title}">Sample blog post</h1>
+            <strong class=" blog-post-meta d-inline-block mb-2 text-primary" th:text="*{difficulty}">Difficulty</strong>
+            <p class="blog-post-meta">Cook time: <span th:text="*{cookTime}"></span></p>
+            <p th:text="*{description}"></p>
+        </div>
+        <div class="d-inline-block ml-5 pl-5 align-top">
+            <img class="recipe-image" th:src="@{'/recipe/' + ${recipe.id} + '/image'}">
+        </div>
+        <hr>
+        <h3 class="mb-4 mt-4 font-italic">Ingredients</h3>
+        <ul class="list-group list-group-flush" th:each=" ingredient : *{ingredients}">
+            <li class="list-group-item" th:text="${ingredient.name}"></li>
+        </ul>
+        <h3 class="mb-4 mt-4 font-italic">Manual</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Image</th>
+                <th scope="col">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each=" step : *{manual.steps}">
+                <th scope="row" th:text="${step.id}">1</th>
+                <td><img class="recipe-image" th:src="@{'/step/' + ${step.id} + '/image'}"></td>
+                <td th:text="${step.description}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
