@@ -6,14 +6,18 @@ import com.portfolio.recipebook.model.Step;
 import com.portfolio.recipebook.service.ImageService;
 import com.portfolio.recipebook.service.ManualService;
 import com.portfolio.recipebook.service.StepService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
+@Slf4j
 @Controller
 public class ManualController {
 
@@ -40,11 +44,67 @@ public class ManualController {
 
     @PostMapping("recipe/{recipe}/manual/step/new")
     public String createStep(@PathVariable Recipe recipe,
-                             @Valid @ModelAttribute Step step,
                              @RequestParam("imageStep") MultipartFile image,
-                             BindingResult result){
-        stepService.saveAndSetToManual(step,recipe.getManual());
-        imageService.saveImageFile(step, image);
+                             @Valid @ModelAttribute("step") Step step,
+                             BindingResult result,
+                             Model model){
+
+        try {
+            boolean imageExist = image.getBytes().length != 0;
+
+            if(result.hasErrors() || !imageExist){
+                if(!imageExist){
+                    result.addError(new FieldError("step","image","image must be chosen"));
+                }
+                result.getAllErrors().forEach(objectError -> {
+                    log.debug(objectError.toString());
+                });
+                model.addAttribute("recipe", recipe);
+                return "manual/indexAndFromStep";
+            }else {
+                stepService.saveAndSetToManual(step,recipe.getManual());
+                imageService.saveImageFile(step, image);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         return "redirect:/recipe/" + recipe.getId() + "/manual";
+    }
+
+    @GetMapping("/recipe/{recipe}/manual/step/{step}/delete")
+    public String delete(@PathVariable("recipe") Recipe recipe,
+                         @PathVariable("step")Step step){
+
+        recipe.getManual().getSteps().remove(step);
+        stepService.delete(step);
+        return "redirect:/recipe/" + recipe.getId() + "/manual";
+    }
+
+    @PostMapping("recipe/{recipe}/manual/step/{step}/edit")
+    public String edit(@PathVariable("recipe") Recipe recipe,
+                       @PathVariable("step") Step step,
+                       @RequestParam("imageStep") MultipartFile image,
+                       @RequestParam("descriptionStep") String description){
+
+        try {
+            if (step.getId() != null) {
+                Byte[] currentImage = stepService.findById(step.getId()).getImage();
+                if (image.getBytes().length != 0) {
+                    imageService.saveImageFile(step, image);
+                } else {
+                    step.setImage(currentImage);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        step.setDescription(description);
+
+        stepService.save(step);
+
+        return "redirect:/recipe/" + recipe.getId()  + "/manual";
     }
 }
