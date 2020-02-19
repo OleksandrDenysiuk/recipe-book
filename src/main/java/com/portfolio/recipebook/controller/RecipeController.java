@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
 
 @Slf4j
 @Controller
@@ -28,7 +31,6 @@ public class RecipeController {
 
     @GetMapping("/all")
     public String viewList(Model model) {
-
         model.addAttribute("recipes", recipeService.findAll());
         return "recipe/list";
     }
@@ -52,14 +54,16 @@ public class RecipeController {
     }
 
     @PostMapping("/saveOrUpdate")
-    public String createOrUpdate(@Valid @ModelAttribute("recipe") Recipe recipe,
-                                 @RequestParam("imageRecipe") MultipartFile image,
+    public String createOrUpdate(@RequestParam("imageRecipe") MultipartFile image,
+                                 @Valid @ModelAttribute("recipe") Recipe recipe,
                                  BindingResult result) {
 
         if (result.hasErrors()) {
             result.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
+
+            return "recipe/form";
         }
 
         try {
@@ -71,7 +75,13 @@ public class RecipeController {
                     recipe.setImage(currentImage);
                 }
             } else {
-                imageService.saveImageFile(recipe, image);
+                if (image.getBytes().length == 0) {
+                    File imageEmptyFile = new File("src/main/resources/static/img/empty.png");
+                    byte[] imageEmptyBytes = Files.readAllBytes(imageEmptyFile.toPath());
+                    recipe.setImage(toObjects(imageEmptyBytes));
+                } else {
+                    imageService.saveImageFile(recipe, image);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,10 +92,16 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id")Recipe recipe){
+    public String delete(@PathVariable("id") Recipe recipe) {
 
         recipeService.delete(recipe);
 
         return "redirect:/recipe/all";
+    }
+
+    private Byte[] toObjects(byte[] bytesPrim) {
+        Byte[] bytes = new Byte[bytesPrim.length];
+        Arrays.setAll(bytes, n -> bytesPrim[n]);
+        return bytes;
     }
 }
