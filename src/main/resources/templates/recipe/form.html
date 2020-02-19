@@ -11,14 +11,27 @@
     <h1 class="title">New recipe</h1>
 
     <form th:object="${recipe}" class="form" method="post" th:action="@{/recipe/saveOrUpdate}" enctype="multipart/form-data">
+        <div th:if="${#fields.hasErrors('*')}" class="invalid-feedback">
+            <p class="mb-0">Something are wrong</p>
+        </div>
         <input type="hidden" th:field="*{id}">
         <div class="form-group">
             <label for="titleRecipe">Title</label>
-            <input th:field="*{title}" type="text" class="form-control" id="titleRecipe" placeholder="Example">
+            <input th:field="*{title}" type="text" class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" id="titleRecipe" placeholder="Example" maxlength="34">
+            <div class="invalid-feedback">
+                <ul>
+                    <li th:each="err : ${#fields.errors('title')}" th:text="${err}"/>
+                </ul>
+            </div>
         </div>
         <div class="form-group">
             <label for="descriptionRecipe">Description</label>
-            <textarea th:field="*{description}" class="form-control" id="descriptionRecipe" rows="3"></textarea>
+            <textarea th:field="*{description}" class="form-control" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" id="descriptionRecipe" rows="3" maxlength="350"></textarea>
+            <div class="invalid-feedback">
+                <ul>
+                    <li th:each="err : ${#fields.errors('description')}" th:text="${err}"/>
+                </ul>
+            </div>
         </div>
         <div class="form-group">
             <label for="imageRecipe">Choose image</label>
@@ -35,9 +48,11 @@
             <div class="form-group col-md-6">
                 <label for="cookTimeRecipe">Cook time</label>
                 <div class="input-group">
-                    <input th:field="*{cookTime}" type="text" class="form-control" id="cookTimeRecipe" placeholder="Example">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">min</div>
+                    <input th:field="*{cookTime}" type="text" class="form-control" th:classappend="${#fields.hasErrors('cookTime')} ? 'is-invalid'" id="cookTimeRecipe" placeholder="Example">
+                    <div class="invalid-feedback">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('cookTime')}" th:text="${err}"/>
+                        </ul>
                     </div>
                 </div>
             </div>

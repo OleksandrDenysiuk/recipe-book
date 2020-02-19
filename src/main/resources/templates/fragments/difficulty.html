@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Difficulty</title>
+</head>
+<body>
+<th:block th:fragment="difficulty(level)" th:switch="${level}">
+    <strong th:case="'EASY'" class="d-inline-block mb-2 text-success flex-grow-1" th:text="${level}"></strong>
+    <strong th:case="'MODERATE'" class="d-inline-block mb-2 text-primary flex-grow-1" th:text="${level}"></strong>
+    <strong th:case="'HARD'" class="d-inline-block mb-2 text-danger flex-grow-1" th:text="${level}"></strong>
+</th:block>
+</body>
+</html>

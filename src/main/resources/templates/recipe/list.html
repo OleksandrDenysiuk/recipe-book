@@ -18,13 +18,17 @@
         </div>
     </div>
     <div class="row mb-2">
+        <h2 th:if="${recipes.size() == 0}" class="text-muted ml-auto mr-auto">List is empty!</h2>
         <div th:object="${recipe}" th:each="recipe : ${recipes}" class="col-md-6">
             <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <h3 class="mb-0" th:text="*{title}">Title</h3>
-                    <strong class="d-inline-block mb-2 text-primary" th:text="*{difficulty}">Difficulty</strong>
-                    <div class="mb-1 text-muted" th:text="*{cookTime}">Cook time</div>
-                    <p class="card-text mb-auto" th:text="*{description}">Description description description
+                <div class="col pl-4 pr-4 pt-4 pb-3 d-flex flex-column position-static">
+                    <h3 class="mb-0 text-break" th:text="*{title}">Title</h3>
+                    <div class="d-flex">
+                        <strong th:replace="~{fragments/difficulty :: difficulty(*{difficulty.toString()})}"></strong>
+                        <div class="mb-1 text-muted" th:text="'Cook time: ' + *{cookTime} + ' min'">Cook time</div>
+                    </div>
+                    <p class="card-text mb-auto text-break recipe-list-text" th:text="*{description}">Description
+                        description description
                         description description
                         description description description description description.</p>
                     <a th:href="@{/recipe/__${recipe.id}__/details}" class="stretched-link">View details</a>

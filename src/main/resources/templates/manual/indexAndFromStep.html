@@ -10,41 +10,69 @@
 
     <h1 class="title text-center">How to cook it</h1>
     <br/>
-    <p class="text-center">
-        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
-                aria-expanded="false" aria-controls="collapseExample">
-            New step
-        </button>
-    </p>
-    <div class="collapse" id="collapseExample">
-        <div class="card card-body">
-            <form th:object="${step}" method="post" th:action="@{/recipe/__${recipe.id}__/manual/step/new}" enctype="multipart/form-data">
+    <form th:object="${step}" method="post" th:action="@{/recipe/__${recipe.id}__/manual/step/new}"
+          enctype="multipart/form-data">
+        <p class="text-center">
+            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseStepForm"
+                    aria-expanded="false" aria-controls="collapseStepForm">
+                New step
+            </button>
+        </p>
+        <div id="collapseStepForm" th:class="${#fields.hasErrors('*')}
+                                ? 'collapse show' : 'collapse'">
+            <div class="card card-body">
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                    <p class="mb-0">Please Correct Errors Below</p>
+                </div>
                 <div class="form-group">
                     <label for="descriptionStep">Description</label>
-                    <textarea th:field="*{description}" class="form-control" id="descriptionStep" rows="3"></textarea>
+                    <textarea th:field="*{description}" class="form-control" id="descriptionStep" rows="3"
+                              maxlength="350" th:class="${#fields.hasErrors('description')}
+                                ? 'form-control is-invalid' : 'form-control'"></textarea>
+                    <div class="invalid-feedback">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('description')}" th:text="${err}"/>
+                        </ul>
+                    </div>
                 </div>
                 <div class="custom-file mb-3">
-                    <input name="imageStep"  type="file" class="custom-file-input" id="customImage">
+                    <input name="imageStep" type="file" class="custom-file-input is-invalid" id="customImage"
+                           th:class="${#fields.hasErrors('image')} ? 'custom-file-input is-invalid' : 'custom-file-input'">
                     <label class="custom-file-label" for="customImage">Choose image</label>
+                    <div class="invalid-feedback">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('image')}" th:text="${err}"/>
+                        </ul>
+                    </div>
                 </div>
                 <br/>
                 <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
     <table th:object="${recipe}" th:else="*{manual != null}" class="table table-striped list-ingredients">
         <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">Image</th>
             <th scope="col">Description</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="step : *{manual.steps}">
             <th scope="row" th:text="${step.id}"></th>
-            <td><img class="recipe-image" th:src="@{'/step/' + ${step.id} + '/image'}"></td>
-            <td th:text="${step.description}"></td>
+            <td th:id="'step-image' + ${step.id}">
+                <img class="step-image" th:src="@{'/step/' + ${step.id} + '/image'}">
+            </td>
+            <td th:id="'step-description' + ${step.id}" th:text="${step.description}"></td>
+            <td>
+                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalStepEdit"
+                        th:data-description="${step.description}" th:data-recipe="${recipe.id}"
+                th:data-step="${step.id}">Edit</button>
+            </td>
+            <td><a th:href="@{manual/step/__${step.id}__/delete}" class="text-danger">Delete</a></td>
         </tr>
         </tbody>
     </table>
@@ -54,5 +82,39 @@
     <a class="btn btn-primary mb-5" th:href="@{/recipe/__${recipe.id}__/ingredients}" role="button">Previous</a>
     <a class="btn btn-primary mb-5" th:href="@{/recipe/all}" role="button">Save recipe</a>
 </div>
+
+
+<!-- Modal -->
+<div id="modalStepEdit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit step</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form -->
+                <form method='post' action='' enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="descriptionStepModal">Description</label>
+                        <textarea name="descriptionStep" class="form-control" id="descriptionStepModal" rows="3"
+                                  maxlength="350"></textarea>
+                    </div>
+                    <div class="custom-file mb-3">
+                        <input name="imageStep" type="file" class="custom-file-input" id="customImageModal">
+                        <label class="custom-file-label" for="customImageModal">Choose image</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/modal_step_edit.js}"></script>
 </body>
 </html>
