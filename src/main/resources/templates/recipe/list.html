@@ -27,10 +27,7 @@
                         <strong th:replace="~{fragments/difficulty :: difficulty(*{difficulty.toString()})}"></strong>
                         <div class="mb-1 text-muted" th:text="'Cook time: ' + *{cookTime} + ' min'">Cook time</div>
                     </div>
-                    <p class="card-text mb-auto text-break recipe-list-text" th:text="*{description}">Description
-                        description description
-                        description description
-                        description description description description description.</p>
+                    <p class="card-text mb-auto text-break recipe-list-text" th:text="*{description}"></p>
                     <a th:href="@{/recipe/__${recipe.id}__/details}" class="stretched-link">View details</a>
                 </div>
                 <div class="col-auto d-none d-lg-block recipe-list-image">

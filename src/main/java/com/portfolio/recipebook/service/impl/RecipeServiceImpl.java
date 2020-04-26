@@ -6,6 +6,7 @@ import com.portfolio.recipebook.service.RecipeService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -17,15 +18,22 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Set findAll() {
+    public Set<Recipe> findAll() {
         Set<Recipe> recipes = new HashSet<>();
         recipeRepository.findAll().forEach(recipes::add);
         return recipes;
     }
 
     @Override
-    public Recipe findById(Long aLong) {
-        return recipeRepository.findById(aLong).orElse(null);
+    public Recipe findById(Long id) {
+
+        Optional<Recipe> recipe = recipeRepository.findById(id);
+
+        if(recipe.isEmpty()){
+            throw new RuntimeException("Recipe not found with id: " + id);
+        }
+
+        return recipe.get();
     }
 
     @Override
@@ -34,14 +42,14 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void delete(Recipe object) {
-        recipeRepository.delete(object);
+    public void delete(Recipe recipe) {
+        recipeRepository.delete(recipe);
     }
 
 
     @Override
-    public void deleteById(Long aLong) {
-        recipeRepository.deleteById(aLong);
+    public void deleteById(Long id) {
+        recipeRepository.deleteById(id);
     }
 
 }

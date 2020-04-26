@@ -1,8 +1,6 @@
 package com.portfolio.recipebook.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -16,9 +14,18 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "recipes")
 public class Recipe extends BaseEntity{
+
+    @Builder
+    public Recipe(Long id, String title, String description,int cookTime) {
+        super(id);
+        this.title = title;
+        this.description = description;
+        this.cookTime = cookTime;
+    }
 
     @NotBlank
     @Size(max = 34)
