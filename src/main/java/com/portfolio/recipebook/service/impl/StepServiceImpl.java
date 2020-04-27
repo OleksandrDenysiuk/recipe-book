@@ -31,12 +31,6 @@ public class StepServiceImpl implements StepService {
         return stepRepository.findById(aLong).orElse(null);
     }
 
-    @Transactional
-    @Override
-    public Step save(Step object) {
-        return stepRepository.save(object);
-    }
-
     @Override
     public void delete(Step object) {
         stepRepository.delete(object);

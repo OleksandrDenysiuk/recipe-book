@@ -2,57 +2,81 @@ package com.portfolio.recipebook.service.impl;
 
 import com.portfolio.recipebook.model.Ingredient;
 import com.portfolio.recipebook.model.Recipe;
-import com.portfolio.recipebook.repository.IngredientRepository;
 import com.portfolio.recipebook.repository.RecipeRepository;
 import com.portfolio.recipebook.service.IngredientService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
 
+@Slf4j
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
-    private final IngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
 
-    public IngredientServiceImpl(IngredientRepository ingredientRepository, RecipeRepository recipeRepository) {
-        this.ingredientRepository = ingredientRepository;
+    public IngredientServiceImpl(RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }
 
     @Override
-    public Set<Ingredient> findAll() {
-        Set<Ingredient> ingredients = new HashSet<>();
-        ingredientRepository.findAll().forEach(ingredients::add);
-        return ingredients;
+    public Ingredient findByIngredientIdAndRecipeId(Long ingredientId, Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if(recipeOptional.isEmpty()){
+            throw new RuntimeException("Recipe was not founded by id: " + recipeId);
+        }else{
+            Recipe recipe = recipeOptional.get();
+
+            Optional<Ingredient> ingredientOptional = recipe
+                    .getIngredients()
+                    .stream()
+                    .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                    .findFirst();
+
+            if (ingredientOptional.isEmpty()) {
+                log.error("Ingredient id not found: " + ingredientId);
+                throw new RuntimeException("Ingredient id not found: " + ingredientId);
+            }else {
+                return ingredientOptional.get();
+            }
+        }
     }
 
     @Override
-    public Ingredient findById(Long aLong) {
-        return ingredientRepository.findById(aLong).orElse(null);
+    public Ingredient save(Ingredient ingredient, Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if(recipeOptional.isEmpty()){
+            throw new RuntimeException("Recipe was not founded by id: " + recipeId);
+        }else{
+            Recipe recipe = recipeOptional.get();
+            ingredient.setRecipe(recipe);
+            recipe.addIngredient(ingredient);
+            recipeRepository.save(recipe);
+        }
+        return ingredient;
     }
 
     @Override
-    public Ingredient save(Ingredient object) {
-        return ingredientRepository.save(object);
-    }
+    public void deleteById(Long ingredientId, Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isEmpty()){
+            throw new RuntimeException("Recipe was not founded by id: " + recipeId);
+        }else{
+            Recipe recipe = recipeOptional.get();
 
-    @Override
-    public Ingredient saveAndSetToRecipe(Ingredient ingredient, Recipe recipe) {
-        ingredient.setRecipe(recipe);
-        Ingredient savedIngredient = ingredientRepository.save(ingredient);
-        recipe.getIngredients().add(ingredient);
-        return savedIngredient;
-    }
+            Optional<Ingredient> ingredientOptional = recipe
+                    .getIngredients()
+                    .stream()
+                    .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                    .findFirst();
 
-    @Override
-    public void delete(Ingredient object) {
-        ingredientRepository.delete(object);
-    }
-
-    @Override
-    public void deleteById(Long aLong) {
-        ingredientRepository.deleteById(aLong);
+            if (ingredientOptional.isEmpty()){
+                throw new RuntimeException("Ingredient was not founded by id: " + ingredientId);
+            }else {
+                ingredientOptional.get().setRecipe(null);
+                recipe.getIngredients().remove(ingredientOptional.get());
+                recipeRepository.save(recipe);
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@
         </button>
     </p>
     <form th:object="${ingredient}" method="post" th:action="@{'/recipe/'+ ${recipe.id} +'/ingredients/new'}">
+        <input type="hidden" th:field="*{id}"/>
         <div class="collapse" th:classappend="${#fields.hasErrors('*')} ? 'show' : ''" id="collapseExample">
             <div class="card card-body">
                 <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">

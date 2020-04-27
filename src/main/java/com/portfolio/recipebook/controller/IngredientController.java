@@ -3,6 +3,7 @@ package com.portfolio.recipebook.controller;
 import com.portfolio.recipebook.model.Ingredient;
 import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.service.IngredientService;
+import com.portfolio.recipebook.service.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +20,11 @@ import javax.validation.Valid;
 public class IngredientController {
 
     private final IngredientService ingredientService;
+    private final RecipeService recipeService;
 
-    public IngredientController(IngredientService ingredientService) {
+    public IngredientController(IngredientService ingredientService, RecipeService recipeService) {
         this.ingredientService = ingredientService;
+        this.recipeService = recipeService;
     }
 
     @GetMapping("/recipe/{id}/ingredients")
@@ -32,8 +35,8 @@ public class IngredientController {
         return "ingredient/listAndForm";
     }
 
-    @PostMapping("recipe/{recipe}/ingredients/new")
-    public String createIngredient(@PathVariable Recipe recipe,
+    @PostMapping("recipe/{recipeId}/ingredients/new")
+    public String createIngredient(@PathVariable String recipeId,
                                    @Valid @ModelAttribute(value = "ingredient") Ingredient ingredient,
                                    BindingResult result,
                                    Model model){
@@ -43,18 +46,18 @@ public class IngredientController {
                 log.debug(objectError.toString());
             });
 
-            model.addAttribute("recipe",recipe);
+            model.addAttribute("recipe",recipeService.findById(Long.valueOf(recipeId)));
 
             return "ingredient/listAndForm";
         }
-        ingredientService.saveAndSetToRecipe(ingredient,recipe);
-        return "redirect:/recipe/" + recipe.getId() + "/ingredients";
+        ingredientService.save(ingredient,Long.valueOf(recipeId));
+        return "redirect:/recipe/" + recipeId + "/ingredients";
     }
 
-    @GetMapping("recipe/{recipe}/ingredient/{ingredient}/delete")
-    public String delete(@PathVariable("recipe") String recipeId,
-                         @PathVariable("ingredient")Ingredient ingredient){
-        ingredientService.delete(ingredient);
+    @GetMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")
+    public String delete(@PathVariable("recipeId") String recipeId,
+                         @PathVariable("ingredientId")String ingredientId){
+        ingredientService.deleteById(Long.valueOf(ingredientId),Long.valueOf(recipeId));
         return "redirect:/recipe/" + recipeId + "/ingredients";
     }
 }

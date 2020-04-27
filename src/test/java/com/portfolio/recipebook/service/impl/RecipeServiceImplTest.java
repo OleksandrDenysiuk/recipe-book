@@ -69,13 +69,6 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void delete() {
-        recipeService.delete(Recipe.builder().build());
-
-        verify(recipeRepository, times(1)).delete(any(Recipe.class));
-    }
-
-    @Test
     void deleteById() {
         Long recipeId = 1L;
 

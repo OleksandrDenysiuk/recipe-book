@@ -52,4 +52,10 @@ public class Recipe extends BaseEntity{
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Manual manual;
+
+    public Recipe addIngredient(Ingredient ingredient){
+        ingredient.setRecipe(this);
+        this.ingredients.add(ingredient);
+        return this;
+    }
 }

@@ -31,12 +31,6 @@ public class ManualServiceImpl implements ManualService {
         return manualRepository.findById(aLong).orElse(null);
     }
 
-    @Transactional
-    @Override
-    public Manual save(Manual object) {
-        return manualRepository.save(object);
-    }
-
     @Override
     public void delete(Manual object) {
         manualRepository.delete(object);

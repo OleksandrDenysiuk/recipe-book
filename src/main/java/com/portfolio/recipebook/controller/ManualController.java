@@ -103,7 +103,7 @@ public class ManualController {
 
         step.setDescription(description);
 
-        stepService.save(step);
+
 
         return "redirect:/recipe/" + recipe.getId()  + "/manual";
     }
