@@ -1,11 +1,11 @@
 package com.portfolio.recipebook.service.impl;
 
-import com.portfolio.recipebook.model.Manual;
 import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.repository.RecipeRepository;
 import com.portfolio.recipebook.service.RecipeService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -26,6 +26,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public Recipe findById(Long id) {
 
         Optional<Recipe> recipe = recipeRepository.findById(id);
@@ -39,11 +40,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe save(Recipe recipe) {
-        
-        Manual manual = new Manual();
-        manual.setRecipe(recipe);
-        recipe.setManual(manual);
-
         return recipeRepository.save(recipe);
     }
 

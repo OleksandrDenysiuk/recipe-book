@@ -43,7 +43,7 @@ class IngredientServiceImplTest {
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
 
         Ingredient ingredient = ingredientService
-                .findByIngredientIdAndRecipeId(ingredientId, recipeId);
+                .findOne(ingredientId, recipeId);
 
         assertNotNull(ingredient);
 
@@ -74,7 +74,7 @@ class IngredientServiceImplTest {
 
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.of(recipe));
 
-        ingredientService.deleteById(1L,1L);
+        ingredientService.deleteOne(1L,1L);
 
         assertEquals(0,recipe.getIngredients().size());
     }

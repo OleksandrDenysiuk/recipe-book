@@ -7,5 +7,5 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ImageService {
     void saveImageFile(Recipe recipe, MultipartFile file);
 
-    void saveImageFile(Step step, MultipartFile file);
+    Step setImageFile(Step step, MultipartFile file);
 }

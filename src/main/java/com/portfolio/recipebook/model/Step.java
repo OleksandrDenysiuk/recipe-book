@@ -1,12 +1,15 @@
 package com.portfolio.recipebook.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 
 @Getter
@@ -16,16 +19,21 @@ import javax.validation.constraints.Size;
 @Table(name = "steps")
 public class Step extends BaseEntity{
 
+    @Builder
+    public Step(Long id, Byte[] image, String description){
+        super(id);
+        this.image = image;
+        this.description = description;
+    }
+
     @Lob
     private Byte[] image;
 
-    @NotBlank
     @Lob
     @Type(type = "text")
     @Size(max = 350)
     private String description;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "manual_id", nullable = false)
-    private Manual manual;
+    @ManyToOne
+    private Recipe recipe;
 }

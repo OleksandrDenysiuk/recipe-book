@@ -32,7 +32,6 @@ public class Recipe extends BaseEntity{
     private String title;
 
     @NotBlank
-    @Lob
     @Type(type = "text")
     @Size(max = 350)
     private String description;
@@ -50,12 +49,20 @@ public class Recipe extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Manual manual;
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "recipe",
+    fetch = FetchType.EAGER)
+    Set<Step> steps = new HashSet<>();
 
     public Recipe addIngredient(Ingredient ingredient){
         ingredient.setRecipe(this);
         this.ingredients.add(ingredient);
+        return this;
+    }
+
+    public Recipe addStep(Step step){
+        step.setRecipe(this);
+        this.steps.add(step);
         return this;
     }
 }

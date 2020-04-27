@@ -1,7 +1,6 @@
 package com.portfolio.recipebook.controller;
 
 import com.portfolio.recipebook.model.Ingredient;
-import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.service.IngredientService;
 import com.portfolio.recipebook.service.RecipeService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +26,10 @@ public class IngredientController {
         this.recipeService = recipeService;
     }
 
-    @GetMapping("/recipe/{id}/ingredients")
-    public String listAndFrom(@PathVariable(value = "id") Recipe recipe,
+    @GetMapping("/recipe/{recipeId}/ingredients")
+    public String listAndFrom(@PathVariable(value = "recipeId") String recipeId,
                               Model model){
-        model.addAttribute("recipe",recipe);
+        model.addAttribute("recipe",recipeService.findById(Long.valueOf(recipeId)));
         model.addAttribute("ingredient", new Ingredient());
         return "ingredient/listAndForm";
     }
@@ -49,15 +48,17 @@ public class IngredientController {
             model.addAttribute("recipe",recipeService.findById(Long.valueOf(recipeId)));
 
             return "ingredient/listAndForm";
+        }else{
+            ingredientService.save(ingredient,Long.valueOf(recipeId));
+
+            return "redirect:/recipe/" + recipeId + "/ingredients";
         }
-        ingredientService.save(ingredient,Long.valueOf(recipeId));
-        return "redirect:/recipe/" + recipeId + "/ingredients";
     }
 
     @GetMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")
     public String delete(@PathVariable("recipeId") String recipeId,
                          @PathVariable("ingredientId")String ingredientId){
-        ingredientService.deleteById(Long.valueOf(ingredientId),Long.valueOf(recipeId));
+        ingredientService.deleteOne(Long.valueOf(ingredientId),Long.valueOf(recipeId));
         return "redirect:/recipe/" + recipeId + "/ingredients";
     }
 }

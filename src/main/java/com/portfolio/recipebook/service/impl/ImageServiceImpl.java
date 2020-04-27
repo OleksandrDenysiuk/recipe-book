@@ -3,7 +3,6 @@ package com.portfolio.recipebook.service.impl;
 import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.model.Step;
 import com.portfolio.recipebook.repository.RecipeRepository;
-import com.portfolio.recipebook.repository.StepRepository;
 import com.portfolio.recipebook.service.ImageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,11 +17,9 @@ public class ImageServiceImpl implements ImageService {
 
 
     private final RecipeRepository recipeRepository;
-    private final StepRepository stepRepository;
 
-    public ImageServiceImpl(RecipeRepository recipeService, StepRepository stepRepository) {
+    public ImageServiceImpl(RecipeRepository recipeService) {
         this.recipeRepository = recipeService;
-        this.stepRepository = stepRepository;
     }
 
     @Override
@@ -49,7 +46,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void saveImageFile(Step step, MultipartFile file) {
+    public Step setImageFile(Step step, MultipartFile file) {
 
         try {
             Byte[] byteObjects = new Byte[file.getBytes().length];
@@ -62,11 +59,12 @@ public class ImageServiceImpl implements ImageService {
 
             step.setImage(byteObjects);
 
-            stepRepository.save(step);
         } catch (IOException e) {
             log.error("Error occurred", e);
             e.printStackTrace();
         }
+
+        return step;
     }
 }
 

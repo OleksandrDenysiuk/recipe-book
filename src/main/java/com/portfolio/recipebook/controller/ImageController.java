@@ -2,6 +2,8 @@ package com.portfolio.recipebook.controller;
 
 import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.model.Step;
+import com.portfolio.recipebook.service.RecipeService;
+import com.portfolio.recipebook.service.StepService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +16,27 @@ import java.io.InputStream;
 
 @Controller
 public class ImageController {
-    @GetMapping("recipe/{id}/image")
-    public void renderImageRecipeFromDB(@PathVariable("id")Recipe recipe, HttpServletResponse response) throws IOException {
 
+    private final StepService stepService;
+    private final RecipeService recipeService;
+
+    public ImageController(StepService stepService, RecipeService recipeService) {
+        this.stepService = stepService;
+        this.recipeService = recipeService;
+    }
+
+    @GetMapping("recipe/{recipeId}/image")
+    public void renderImageRecipeFromDB(@PathVariable("recipeId") String recipeId, HttpServletResponse response) throws IOException {
+        Recipe recipe = recipeService.findById(Long.valueOf(recipeId));
         renderImage(response, recipe.getImage());
     }
 
 
-    @GetMapping("step/{id}/image")
-    public void renderImageStepFromDB(@PathVariable("id") Step step, HttpServletResponse response) throws IOException {
+    @GetMapping("/recipe/{recipeId}/step/{stepId}/image")
+    public void renderImageStepFromDB(@PathVariable("recipeId") String recipeId,
+                                      @PathVariable("stepId") String stepId,
+                                      HttpServletResponse response) throws IOException {
+        Step step = stepService.findOne(Long.valueOf(stepId),Long.valueOf(recipeId));
         renderImage(response, step.getImage());
     }
 

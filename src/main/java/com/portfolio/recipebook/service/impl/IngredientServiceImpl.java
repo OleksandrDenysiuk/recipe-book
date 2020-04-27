@@ -20,7 +20,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient findByIngredientIdAndRecipeId(Long ingredientId, Long recipeId) {
+    public Ingredient findOne(Long ingredientId, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if(recipeOptional.isEmpty()){
             throw new RuntimeException("Recipe was not founded by id: " + recipeId);
@@ -49,7 +49,6 @@ public class IngredientServiceImpl implements IngredientService {
             throw new RuntimeException("Recipe was not founded by id: " + recipeId);
         }else{
             Recipe recipe = recipeOptional.get();
-            ingredient.setRecipe(recipe);
             recipe.addIngredient(ingredient);
             recipeRepository.save(recipe);
         }
@@ -57,7 +56,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteById(Long ingredientId, Long recipeId) {
+    public void deleteOne(Long ingredientId, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if (recipeOptional.isEmpty()){
             throw new RuntimeException("Recipe was not founded by id: " + recipeId);

@@ -35,9 +35,9 @@ public class RecipeController {
         return "recipe/list";
     }
 
-    @GetMapping("/{id}/details")
-    public String viewDetails(@PathVariable("id") Recipe recipe, Model model) {
-        model.addAttribute("recipe", recipe);
+    @GetMapping("/{recipeId}")
+    public String viewDetails(@PathVariable("recipeId") String recipeId, Model model) {
+        model.addAttribute("recipe", recipeService.findById(Long.valueOf(recipeId)));
         return "recipe/index";
     }
 
@@ -47,9 +47,9 @@ public class RecipeController {
         return "recipe/form";
     }
 
-    @GetMapping("/{id}/edit")
-    public String editForm(@PathVariable("id") Recipe recipe, Model model) {
-        model.addAttribute("recipe", recipe);
+    @GetMapping("/{recipeId}/edit")
+    public String editForm(@PathVariable("recipeId") String recipeId, Model model) {
+        model.addAttribute("recipe", recipeService.findById(Long.valueOf(recipeId)));
         return "recipe/form";
     }
 

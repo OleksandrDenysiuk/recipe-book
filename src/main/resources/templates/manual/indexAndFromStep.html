@@ -50,7 +50,7 @@
             </div>
         </div>
     </form>
-    <table th:object="${recipe}" th:else="*{manual != null}" class="table table-striped list-ingredients">
+    <table th:object="${recipe}" class="table table-striped list-ingredients">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -61,10 +61,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="step : *{manual.steps}">
+        <tr th:each="step : ${steps}">
             <th scope="row" th:text="${step.id}"></th>
             <td th:id="'step-image' + ${step.id}">
-                <img class="step-image" th:src="@{'/step/' + ${step.id} + '/image'}">
+                <img class="step-image" th:src="@{'/recipe/' + ${recipe.id} + '/step/' + ${step.id} + '/image'}">
             </td>
             <td th:id="'step-description' + ${step.id}" th:text="${step.description}"></td>
             <td>
@@ -76,7 +76,7 @@
         </tr>
         </tbody>
     </table>
-    <h2 class="text-muted text-center" th:if="${recipe.manual.steps.size() == 0}">
+    <h2 class="text-muted text-center" th:if="${recipe.steps.size() == 0}">
         List is Empty
     </h2>
     <a class="btn btn-primary mb-5" th:href="@{/recipe/__${recipe.id}__/ingredients}" role="button">Previous</a>

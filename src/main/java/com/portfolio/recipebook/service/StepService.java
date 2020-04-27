@@ -1,14 +1,9 @@
 package com.portfolio.recipebook.service;
 
-import com.portfolio.recipebook.model.Manual;
 import com.portfolio.recipebook.model.Step;
 
-import java.util.Set;
-
 public interface StepService{
-    Step saveAndSetToManual(Step step, Manual manual);
-    Set<Step> findAll();
-    Step findById(Long aLong);
-    void delete(Step object);
-    void deleteById(Long aLong);
+    Step save(Step step, Long recipeId);
+    Step findOne(Long stepId, Long recipeId);
+    void deleteOne(Long stepId, Long recipeId);
 }

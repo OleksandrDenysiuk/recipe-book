@@ -15,18 +15,14 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @Entity
 @Table(name = "ingredients")
-public class Ingredient{
+public class Ingredient extends BaseEntity{
 
     @Builder
     public Ingredient(Long id, String name, int amount) {
-        this.id = id;
+        super(id);
         this.name = name;
         this.amount = amount;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @NotBlank
     @Size(max = 34)
@@ -41,19 +37,4 @@ public class Ingredient{
 
     @Enumerated(EnumType.STRING)
     private MeasureOfIngredient measure;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Ingredient that = (Ingredient) o;
-
-        return id != null ? id.equals(that.id) : that.id == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return 32;
-    }
 }

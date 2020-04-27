@@ -20,7 +20,6 @@
             <p class="mb-auto" th:text="*{description}"></p>
         </div>
         <div class="d-inline-block align-top recipe-image">
-            <img class="recipe-image" th:src="@{'/recipe/' + ${recipe.id} + '/image'}">
         </div>
         <hr>
         <h3 class="mb-4 mt-4 font-italic">Ingredients</h3>
@@ -38,14 +37,13 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="*{manual}" th:each=" step : *{manual.steps}">
+            <tr th:if="*{steps.size() != 0}" th:each=" step : *{steps}">
                 <th scope="row" th:text="${step.id}">1</th>
-                <td><img class="step-image" th:src="@{'/step/' + ${step.id} + '/image'}"></td>
                 <td th:text="${step.description}"></td>
             </tr>
             </tbody>
         </table>
-        <h4 th:if="*{manual.steps.size() == 0}" class="text-muted text-center">List is empty!</h4>
+        <h4 th:if="*{steps.size() == 0}" class="text-muted text-center">List is empty!</h4>
     </div>
 </div>
 </body>
