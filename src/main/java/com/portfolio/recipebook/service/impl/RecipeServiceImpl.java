@@ -1,5 +1,6 @@
 package com.portfolio.recipebook.service.impl;
 
+import com.portfolio.recipebook.model.Manual;
 import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.repository.RecipeRepository;
 import com.portfolio.recipebook.service.RecipeService;
@@ -37,8 +38,13 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe save(Recipe object) {
-        return recipeRepository.save(object);
+    public Recipe save(Recipe recipe) {
+        
+        Manual manual = new Manual();
+        manual.setRecipe(recipe);
+        recipe.setManual(manual);
+
+        return recipeRepository.save(recipe);
     }
 
 

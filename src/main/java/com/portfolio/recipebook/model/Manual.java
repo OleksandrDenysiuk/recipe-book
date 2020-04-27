@@ -15,8 +15,7 @@ import java.util.Set;
 @Table(name = "manuals")
 public class Manual extends BaseEntity{
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "recipe_id")
+    @OneToOne
     private Recipe recipe;
 
     @OneToMany(cascade = CascadeType.ALL,
