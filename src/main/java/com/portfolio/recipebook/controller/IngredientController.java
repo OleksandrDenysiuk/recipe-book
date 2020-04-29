@@ -34,7 +34,7 @@ public class IngredientController {
         return "ingredient/listAndForm";
     }
 
-    @PostMapping("recipe/{recipeId}/ingredients/new")
+    @PostMapping("/recipe/{recipeId}/ingredients/new")
     public String createIngredient(@PathVariable String recipeId,
                                    @Valid @ModelAttribute(value = "ingredient") Ingredient ingredient,
                                    BindingResult result,
@@ -56,7 +56,7 @@ public class IngredientController {
         }
     }
 
-    @GetMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")
+    @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/delete")
     public String delete(@PathVariable("recipeId") String recipeId,
                          @PathVariable("ingredientId")String ingredientId){
         ingredientService.deleteOne(Long.valueOf(ingredientId),Long.valueOf(recipeId));
