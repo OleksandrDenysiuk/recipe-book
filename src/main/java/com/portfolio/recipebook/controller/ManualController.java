@@ -1,6 +1,5 @@
 package com.portfolio.recipebook.controller;
 
-import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.model.Step;
 import com.portfolio.recipebook.service.ImageService;
 import com.portfolio.recipebook.service.RecipeService;
@@ -30,10 +29,9 @@ public class ManualController {
         this.recipeService = recipeService;
     }
 
-    @GetMapping("recipe/{id}/manual")
-    public String viewManual(@PathVariable(value = "id") Recipe recipe, Model model) {
-        model.addAttribute("recipe", recipe);
-        model.addAttribute("steps",recipe.getSteps());
+    @GetMapping("recipe/{recipeId}/manual")
+    public String viewManual(@PathVariable("recipeId") String recipeId, Model model) {
+        model.addAttribute("recipe", recipeService.findById(Long.valueOf(recipeId)));
         model.addAttribute("step", new Step());
         return "manual/indexAndFromStep";
     }
@@ -92,10 +90,7 @@ public class ManualController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         currentStep.setDescription(description);
-
-
         return "redirect:/recipe/" + recipeId + "/manual";
     }
 }

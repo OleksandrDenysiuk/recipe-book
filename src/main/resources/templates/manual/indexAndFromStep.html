@@ -61,7 +61,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="step : ${steps}">
+        <tr th:each="step : *{steps}">
             <th scope="row" th:text="${step.id}"></th>
             <td th:id="'step-image' + ${step.id}">
                 <img class="step-image" th:src="@{'/recipe/' + ${recipe.id} + '/step/' + ${step.id} + '/image'}">

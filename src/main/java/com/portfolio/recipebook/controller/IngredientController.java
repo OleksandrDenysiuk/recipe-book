@@ -27,7 +27,7 @@ public class IngredientController {
     }
 
     @GetMapping("/recipe/{recipeId}/ingredients")
-    public String listAndFrom(@PathVariable(value = "recipeId") String recipeId,
+    public String listAndFrom(@PathVariable("recipeId") String recipeId,
                               Model model){
         model.addAttribute("recipe",recipeService.findById(Long.valueOf(recipeId)));
         model.addAttribute("ingredient", new Ingredient());
@@ -49,6 +49,7 @@ public class IngredientController {
 
             return "ingredient/listAndForm";
         }else{
+
             ingredientService.save(ingredient,Long.valueOf(recipeId));
 
             return "redirect:/recipe/" + recipeId + "/ingredients";
