@@ -2,6 +2,7 @@ package com.portfolio.recipebook.service.impl;
 
 import com.portfolio.recipebook.command.StepCommand;
 import com.portfolio.recipebook.dto.StepDto;
+import com.portfolio.recipebook.mapper.ImageMapper;
 import com.portfolio.recipebook.mapper.StepMapper;
 import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.model.Step;
@@ -11,7 +12,6 @@ import com.portfolio.recipebook.service.StepService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -32,30 +32,16 @@ public class StepServiceImpl implements StepService {
     @Transactional
     public StepDto create(StepCommand stepCommand, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if(recipeOptional.isEmpty()){
-            throw  new RuntimeException("Recipe was not founded with id: " + recipeId);
-        }else{
+        if (recipeOptional.isEmpty()) {
+            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
+        } else {
             Recipe recipe = recipeOptional.get();
 
             Step step = new Step();
             step.setId(stepCommand.getId());
             step.setDescription(stepCommand.getDescription());
             step.setRecipe(recipe);
-
-            try {
-                Byte[] byteObjects = new Byte[stepCommand.getImage().getBytes().length];
-
-                int i = 0;
-
-                for (byte b : stepCommand.getImage().getBytes()){
-                    byteObjects[i++] = b;
-                }
-
-                step.setImage(byteObjects);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            step.setImage(ImageMapper.toByteArray(stepCommand.getImage()));
             recipe.addStep(step);
 
             return StepMapper.toDto(stepRepository.save(step));
@@ -63,12 +49,36 @@ public class StepServiceImpl implements StepService {
     }
 
     @Override
+    public StepDto update(StepCommand stepCommand, Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isEmpty()) {
+            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
+        } else {
+            Recipe recipe = recipeOptional.get();
+            Optional<Step> stepOptional = recipe.getSteps()
+                    .stream()
+                    .filter(step -> step.getId().equals(stepCommand.getId()))
+                    .findFirst();
+            if (stepOptional.isEmpty()) {
+                throw new RuntimeException("Recipe was not founded with id: " + recipeId);
+            } else {
+                Step step = stepOptional.get();
+                if (stepCommand.getImage() != null) {
+                    step.setImage(ImageMapper.toByteArray(stepCommand.getImage()));
+                }
+                step.setDescription(stepCommand.getDescription());
+                return StepMapper.toDto(stepRepository.save(step));
+            }
+        }
+    }
+
+    @Override
     @Transactional
     public List<StepDto> getAll(Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if(recipeOptional.isEmpty()){
-            throw  new RuntimeException("Recipe was not founded with id: " + recipeId);
-        }else{
+        if (recipeOptional.isEmpty()) {
+            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
+        } else {
             Recipe recipe = recipeOptional.get();
             return recipe.getSteps()
                     .stream()
@@ -82,17 +92,17 @@ public class StepServiceImpl implements StepService {
     @Transactional
     public void delete(Long stepId, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if(recipeOptional.isEmpty()){
-            throw  new RuntimeException("Recipe was not founded with id: " + recipeId);
-        }else{
+        if (recipeOptional.isEmpty()) {
+            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
+        } else {
             Recipe recipe = recipeOptional.get();
             Optional<Step> stepOptional = recipe.getSteps()
                     .stream()
                     .filter(step -> step.getId().equals(stepId))
                     .findFirst();
-            if(stepOptional.isEmpty()){
+            if (stepOptional.isEmpty()) {
                 throw new RuntimeException("Recipe was not founded with id: " + recipeId);
-            }else{
+            } else {
                 Step step = stepOptional.get();
                 recipe.getSteps().remove(step);
                 stepRepository.delete(step);
