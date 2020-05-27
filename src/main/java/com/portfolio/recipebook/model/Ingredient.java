@@ -33,6 +33,7 @@ public class Ingredient extends BaseEntity{
     private int amount;
 
     @ManyToOne
+    @JoinColumn(name = "fk_recipe")
     private Recipe recipe;
 
     @Enumerated(EnumType.STRING)
