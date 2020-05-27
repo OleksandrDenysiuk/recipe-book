@@ -4,13 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -30,8 +28,6 @@ public class Step extends BaseEntity{
     private Byte[] image;
 
     @Lob
-    @Type(type = "text")
-    @Size(max = 350)
     private String description;
 
     @ManyToOne

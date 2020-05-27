@@ -4,10 +4,6 @@ package com.portfolio.recipebook.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
@@ -24,12 +20,8 @@ public class Ingredient extends BaseEntity{
         this.amount = amount;
     }
 
-    @NotBlank
-    @Size(max = 34)
     private String name;
 
-    @Min(1)
-    @Max(50)
     private int amount;
 
     @ManyToOne
