@@ -1,5 +1,6 @@
 package com.portfolio.recipebook.controller;
 
+import com.portfolio.recipebook.dto.IngredientDto;
 import com.portfolio.recipebook.model.Ingredient;
 import com.portfolio.recipebook.service.IngredientService;
 import com.portfolio.recipebook.service.RecipeService;
@@ -7,12 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -61,5 +60,12 @@ public class IngredientController {
                          @PathVariable("ingredientId")String ingredientId){
         ingredientService.deleteOne(Long.valueOf(ingredientId),Long.valueOf(recipeId));
         return "redirect:/recipe/" + recipeId + "/ingredients";
+    }
+
+    @GetMapping("/api/recipes/{recipeId}/ingredients")
+    public @ResponseBody
+    List<IngredientDto>
+    getSet(@PathVariable("recipeId") Long recipeId){
+        return ingredientService.getAll(recipeId);
     }
 }
