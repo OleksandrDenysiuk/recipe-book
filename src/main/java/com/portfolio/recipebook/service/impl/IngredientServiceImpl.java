@@ -1,22 +1,46 @@
 package com.portfolio.recipebook.service.impl;
 
+import com.portfolio.recipebook.dto.IngredientDto;
+import com.portfolio.recipebook.mapper.IngredientMapper;
 import com.portfolio.recipebook.model.Ingredient;
 import com.portfolio.recipebook.model.Recipe;
+import com.portfolio.recipebook.repository.IngredientRepository;
 import com.portfolio.recipebook.repository.RecipeRepository;
 import com.portfolio.recipebook.service.IngredientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
     private final RecipeRepository recipeRepository;
+    private final IngredientRepository ingredientRepository;
 
-    public IngredientServiceImpl(RecipeRepository recipeRepository) {
+    public IngredientServiceImpl(RecipeRepository recipeRepository, IngredientRepository ingredientRepository) {
         this.recipeRepository = recipeRepository;
+        this.ingredientRepository = ingredientRepository;
+    }
+
+    @Override
+    public List<IngredientDto> getAll(Long recipeId) {
+        Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
+        if(optionalRecipe.isPresent()){
+            Recipe recipe = optionalRecipe.get();
+            return recipe.getIngredients()
+                    .stream()
+                    .map(IngredientMapper::toDto)
+                    .sorted(Comparator.comparing(IngredientDto::getId).reversed())
+                    .collect(Collectors.toList());
+        }else {
+            throw new RuntimeException("Recipe not found");
+        }
+
     }
 
     @Override
