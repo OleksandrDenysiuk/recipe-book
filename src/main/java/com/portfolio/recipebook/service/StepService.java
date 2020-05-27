@@ -1,9 +1,14 @@
 package com.portfolio.recipebook.service;
 
-import com.portfolio.recipebook.model.Step;
+import com.portfolio.recipebook.command.StepCommand;
+import com.portfolio.recipebook.dto.StepDto;
+
+import java.util.List;
 
 public interface StepService{
-    Step save(Step step, Long recipeId);
-    Step findOne(Long stepId, Long recipeId);
-    void deleteOne(Long stepId, Long recipeId);
+    StepDto create(StepCommand stepCommand, Long recipeId);
+
+    List<StepDto> getAll(Long recipeId);
+
+    void delete(Long stepId, Long recipeId);
 }
