@@ -10,15 +10,16 @@
     <h1 class="title text-center">How to cook it</h1>
     <br/>
 
-        <p class="text-center">
-            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseStepForm"
-                    aria-expanded="false" aria-controls="collapseStepForm">
-                New step
-            </button>
-        </p>
+    <p class="text-center">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseStepForm"
+                aria-expanded="false" aria-controls="collapseStepForm">
+            New step
+        </button>
+    </p>
     <input type="hidden" id="recipeId" th:value="${recipe.id}">
-    <form id="form" method="post" enctype="multipart/form-data">
-        <div id="collapseStepForm">
+    <div class="collapse" id="collapseStepForm">
+        <form id="form" method="post" enctype="multipart/form-data">
+
             <div class="card card-body">
                 <div class="alert alert-danger">
                     <p class="mb-0">Please Correct Errors Below</p>
@@ -45,8 +46,9 @@
                 <br/>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
+
     <table th:object="${recipe}" class="table table-striped list-ingredients">
         <thead>
         <tr>
@@ -60,14 +62,15 @@
         <tbody>
         <tr th:each="step : *{steps}">
             <th scope="row" th:text="${step.id}"></th>
-            <td th:id="'step-image' + ${step.id}">
-                <img class="step-image" th:src="@{'/recipe/' + ${recipe.id} + '/step/' + ${step.id} + '/image'}">
+            <td>
+                <img class="step-image" src="" th:data-recipe-id="${recipe.id}" th:data-step-id="${step.id}">
             </td>
-            <td th:id="'step-description' + ${step.id}" th:text="${step.description}"></td>
+            <td th:text="${step.description}"></td>
             <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalStepEdit"
                         th:data-description="${step.description}" th:data-recipe="${recipe.id}"
-                th:data-step="${step.id}">Edit</button>
+                        th:data-step="${step.id}">Edit
+                </button>
             </td>
             <td><a id="delete" th:href="@{/steps/__${step.id}__}" class="text-danger">Delete</a></td>
         </tr>
@@ -95,14 +98,14 @@
             </div>
             <div class="modal-body">
                 <!-- Form -->
-                <form method='post' action='' enctype="multipart/form-data">
+                <form method='post' action='' id="editForm" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="descriptionStepModal">Description</label>
-                        <textarea name="descriptionStep" class="form-control" id="descriptionStepModal" rows="3"
+                        <textarea name="description" class="form-control" id="descriptionStepModal" rows="3"
                                   maxlength="350"></textarea>
                     </div>
                     <div class="custom-file mb-3">
-                        <input name="imageStep" type="file" class="custom-file-input" id="customImageModal">
+                        <input name="image" type="file" class="custom-file-input" id="customImageModal">
                         <label class="custom-file-label" for="customImageModal">Choose image</label>
                     </div>
                     <button type="submit" class="btn btn-primary">Save changes</button>

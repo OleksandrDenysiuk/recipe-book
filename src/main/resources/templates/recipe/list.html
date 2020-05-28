@@ -29,11 +29,12 @@
                     <a th:href="@{/recipes/__${recipe.id}__}" class="stretched-link">View details</a>
                 </div>
                 <div class="col-auto d-none d-lg-block recipe-list-image">
-                    <img class="recipe-list-image" th:src="@{'/recipe/' + ${recipe.id} + '/image'}">
+                    <img class="recipe-list-image" src="" th:data-recipe-id="${recipe.id}">
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script th:src="@{/js/recipe/list.js}"></script>
 </body>
 </html>
