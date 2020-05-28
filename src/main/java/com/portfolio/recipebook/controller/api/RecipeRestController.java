@@ -1,14 +1,13 @@
 package com.portfolio.recipebook.controller.api;
 
+import com.portfolio.recipebook.command.RecipeCommand;
 import com.portfolio.recipebook.dto.RecipeDto;
 import com.portfolio.recipebook.service.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -24,26 +23,36 @@ public class RecipeRestController {
         this.recipeService = recipeService;
     }
 
-    @GetMapping("/api/recipes")
+    @GetMapping("/recipes")
     @ResponseStatus(HttpStatus.OK)
     public List<RecipeDto> getRecipeList(){
         return recipeService.getAll();
     }
 
-    /*@PostMapping("/saveOrUpdate")
-    public String createOrUpdate() {
-
-                if (image.getBytes().length == 0) {
-                    File imageEmptyFile = new File("src/main/resources/static/img/empty.png");
-                    byte[] imageEmptyBytes = Files.readAllBytes(imageEmptyFile.toPath());
-                    recipe.setImage(toObjects(imageEmptyBytes));
-                }
+    @GetMapping("/recipes/{recipeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public RecipeDto getRecipe(@PathVariable("recipeId") Long recipeId){
+        return recipeService.getById(recipeId);
     }
 
+    @PostMapping("/recipes")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RecipeDto create(@ModelAttribute RecipeCommand recipeCommand) throws IOException {
+        return recipeService.create(recipeCommand);
+    }
 
-    private Byte[] toObjects(byte[] bytesPrim) {
-        Byte[] bytes = new Byte[bytesPrim.length];
-        Arrays.setAll(bytes, n -> bytesPrim[n]);
-        return bytes;
-    }*/
+    @PutMapping("/recipes/{recipeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public RecipeDto update(@PathVariable("recipeId") Long recipeId,
+                            @ModelAttribute RecipeCommand recipeCommand){
+        recipeCommand.setId(recipeId);
+        return recipeService.update(recipeCommand);
+    }
+
+    @DeleteMapping("/recipes/{recipeId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable("recipeId") Long recipeId){
+        recipeService.delete(recipeId);
+    }
+
 }
