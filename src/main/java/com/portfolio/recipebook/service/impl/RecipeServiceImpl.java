@@ -9,6 +9,7 @@ import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.repository.RecipeRepository;
 import com.portfolio.recipebook.service.RecipeService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,6 +26,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public List<RecipeDto> getAll() {
         List<RecipeDto> recipeDtoList = new ArrayList<>();
         recipeRepository.findAll().forEach(recipe -> recipeDtoList.add(RecipeMapper.toDto(recipe)));
@@ -76,6 +78,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public RecipeDto getById(Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if(recipeOptional.isPresent()) {
