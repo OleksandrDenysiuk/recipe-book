@@ -7,22 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
-public class ViewController {
+public class IngredientController {
+
     private final RecipeService recipeService;
 
-    public ViewController(RecipeService recipeService) {
+    public IngredientController(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
 
-    @GetMapping({"","/","index.html"})
-    public String getIndexPage(){
-        return "index";
-    }
-
-    @GetMapping("/recipes/{recipeId}/ingredients/page")
-    public String getIngredientsPage(@PathVariable("recipeId") String recipeId,
-                              Model model) {
-        model.addAttribute("recipe", recipeService.findById(Long.valueOf(recipeId)));
+    @GetMapping("/recipes/{recipeId}/ingredients")
+    public String getIngredientsPage(@PathVariable("recipeId") Long recipeId,
+                                     Model model) {
+        model.addAttribute("recipe", recipeService.getById(recipeId));
         return "ingredient/listAndForm";
     }
 }

@@ -11,14 +11,14 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(IngredientController.BASE_URL)
-public class IngredientController {
+@RequestMapping(IngredientRestController.BASE_URL)
+public class IngredientRestController {
 
     public static final String BASE_URL = "/api";
 
     private final IngredientService ingredientService;
 
-    public IngredientController(IngredientService ingredientService) {
+    public IngredientRestController(IngredientService ingredientService) {
         this.ingredientService = ingredientService;
     }
 

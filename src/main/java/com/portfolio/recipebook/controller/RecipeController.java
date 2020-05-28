@@ -1,105 +1,37 @@
 package com.portfolio.recipebook.controller;
 
-import com.portfolio.recipebook.model.Recipe;
-import com.portfolio.recipebook.service.ImageService;
 import com.portfolio.recipebook.service.RecipeService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.validation.Valid;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-
-@Slf4j
 @Controller
-@RequestMapping("/recipe")
 public class RecipeController {
-    private final RecipeService recipeService;
-    private final ImageService imageService;
 
-    public RecipeController(RecipeService recipeService, ImageService imageService) {
+    private final RecipeService recipeService;
+
+    public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
-        this.imageService = imageService;
     }
 
-
-    @GetMapping("/all")
-    public String viewList(Model model) {
-        model.addAttribute("recipes", recipeService.findAll());
+    @GetMapping("/recipes")
+    public String recipeList(Model model) {
+        model.addAttribute("recipes", recipeService.getAll());
         return "recipe/list";
     }
 
-    @GetMapping("/{recipeId}")
-    public String viewDetails(@PathVariable("recipeId") String recipeId, Model model) {
-        model.addAttribute("recipe", recipeService.findById(Long.valueOf(recipeId)));
+    @GetMapping("/recipes/{recipeId}")
+    public String recipeIndex(@PathVariable("recipeId") Long recipeId,
+                             Model model) {
+        model.addAttribute("recipe", recipeService.getById(recipeId));
         return "recipe/index";
     }
 
-    @GetMapping("/new")
-    public String viewForm(Model model) {
-        model.addAttribute("recipe", new Recipe());
+    @GetMapping("/recipes/{recipeId}/edit")
+    public String recipeForm(@PathVariable("recipeId") Long recipeId,
+                             Model model) {
+        model.addAttribute("recipe", recipeService.getById(recipeId));
         return "recipe/form";
-    }
-
-    @GetMapping("/{recipeId}/edit")
-    public String editForm(@PathVariable("recipeId") String recipeId, Model model) {
-        model.addAttribute("recipe", recipeService.findById(Long.valueOf(recipeId)));
-        return "recipe/form";
-    }
-
-    @PostMapping("/saveOrUpdate")
-    public String createOrUpdate(@RequestParam("imageRecipe") MultipartFile image,
-                                 @Valid @ModelAttribute("recipe") Recipe recipe,
-                                 BindingResult result) {
-
-        if (result.hasErrors()) {
-            result.getAllErrors().forEach(objectError -> {
-                log.debug(objectError.toString());
-            });
-
-            return "recipe/form";
-        }
-
-        try {
-            if (recipe.getId() != null) {
-                Byte[] currentImage = recipeService.findById(recipe.getId()).getImage();
-                if (image.getBytes().length != 0) {
-                    imageService.saveImageFile(recipe, image);
-                } else {
-                    recipe.setImage(currentImage);
-                }
-            } else {
-                if (image.getBytes().length == 0) {
-                    File imageEmptyFile = new File("src/main/resources/static/img/empty.png");
-                    byte[] imageEmptyBytes = Files.readAllBytes(imageEmptyFile.toPath());
-                    recipe.setImage(toObjects(imageEmptyBytes));
-                } else {
-                    imageService.saveImageFile(recipe, image);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Recipe savedRecipe = recipeService.save(recipe);
-        return "redirect:/recipe/" + savedRecipe.getId() + "/ingredients";
-    }
-
-    @GetMapping("/{id}/delete")
-    public String delete(@PathVariable("id") String recipeId) {
-        recipeService.deleteById(Long.valueOf(recipeId));
-        return "redirect:/recipe/all";
-    }
-
-    private Byte[] toObjects(byte[] bytesPrim) {
-        Byte[] bytes = new Byte[bytesPrim.length];
-        Arrays.setAll(bytes, n -> bytesPrim[n]);
-        return bytes;
     }
 }
