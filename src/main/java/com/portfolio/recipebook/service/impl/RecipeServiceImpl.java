@@ -8,9 +8,14 @@ import com.portfolio.recipebook.model.Difficulty;
 import com.portfolio.recipebook.model.Recipe;
 import com.portfolio.recipebook.repository.RecipeRepository;
 import com.portfolio.recipebook.service.RecipeService;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,43 +42,47 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public RecipeDto create(RecipeCommand recipeCommand) {
+    public RecipeDto create(RecipeCommand recipeCommand) throws IOException {
         Recipe recipe = new Recipe();
         recipe.setId(recipeCommand.getId());
         recipe.setCookTime(recipeCommand.getCookTime());
         recipe.setDescription(recipeCommand.getDescription());
         recipe.setTitle(recipeCommand.getTitle());
         recipe.setDifficulty(Difficulty.valueOf(recipeCommand.getDifficulty()));
-        recipe.setImage(ImageMapper.toByteArray(recipeCommand.getImage()));
+        if (recipeCommand.getImage().getSize() == 0) {
+            MultipartFile multipartFile = new MockMultipartFile("defaultImage",
+                    new FileInputStream(new File("src/main/resources/static/img/empty.png"))
+            );
+            recipe.setImage(ImageMapper.toByteArray(multipartFile));
+        }
         return RecipeMapper.toDto(recipeRepository.save(recipe));
     }
 
     @Override
     public RecipeDto update(RecipeCommand recipeCommand) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeCommand.getId());
-        if(recipeOptional.isPresent()) {
+        if (recipeOptional.isPresent()) {
             Recipe recipe = recipeOptional.get();
             recipe.setCookTime(recipeCommand.getCookTime());
             recipe.setDescription(recipeCommand.getDescription());
             recipe.setTitle(recipeCommand.getTitle());
             recipe.setDifficulty(Difficulty.valueOf(recipeCommand.getDifficulty()));
-            if (recipeCommand.getImage() != null) {
+            if (recipeCommand.getImage().getSize() != 0) {
                 recipe.setImage(ImageMapper.toByteArray(recipeCommand.getImage()));
             }
-
             return RecipeMapper.toDto(recipeRepository.save(recipe));
-        }else{
-            throw  new RuntimeException("Recipe not found");
+        } else {
+            throw new RuntimeException("Recipe not found");
         }
     }
 
     @Override
     public void delete(Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if(recipeOptional.isPresent()) {
+        if (recipeOptional.isPresent()) {
             recipeRepository.delete(recipeOptional.get());
-        }else{
-            throw  new RuntimeException("Recipe not found");
+        } else {
+            throw new RuntimeException("Recipe not found");
         }
     }
 
@@ -81,10 +90,10 @@ public class RecipeServiceImpl implements RecipeService {
     @Transactional
     public RecipeDto getById(Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if(recipeOptional.isPresent()) {
+        if (recipeOptional.isPresent()) {
             return RecipeMapper.toDto(recipeOptional.get());
-        }else{
-            throw  new RuntimeException("Recipe not found");
+        } else {
+            throw new RuntimeException("Recipe not found");
         }
     }
 
