@@ -6,6 +6,6 @@ $(document).ready(function () {
         var description = button.data('description');
         var modal = $(this);
         modal.find('.modal-body textarea').val(description);
-        modal.find('.modal-body form').attr('action', '/recipe/' + recipeId + '/manual/step/' + stepId + '/edit');
+        modal.find('.modal-body form').attr('action', '/recipes/' + recipeId + '/steps/' + stepId);
     });
 });
