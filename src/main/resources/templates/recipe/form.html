@@ -7,40 +7,38 @@
 </head>
 <body>
 <div class="container">
-
     <h1 class="title">New recipe</h1>
-
-    <form th:object="${recipe}" class="form" method="post" th:action="@{/recipe/saveOrUpdate}" enctype="multipart/form-data">
-        <div th:if="${#fields.hasErrors('*')}" class="invalid-feedback">
+    <form id="form" class="form" method="post" enctype="multipart/form-data">
+        <div class="invalid-feedback">
             <p class="mb-0">Something are wrong</p>
         </div>
-        <input type="hidden" th:field="*{id}">
+        <input type="hidden" id="recipeId" th:if="${recipe}" th:value="${recipe.id}">
         <div class="form-group">
             <label for="titleRecipe">Title</label>
-            <input th:field="*{title}" type="text" class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" id="titleRecipe" placeholder="Example" maxlength="34">
+            <input type="text" class="form-control" id="titleRecipe" name="title" placeholder="Example" maxlength="34">
             <div class="invalid-feedback">
                 <ul>
-                    <li th:each="err : ${#fields.errors('title')}" th:text="${err}"/>
+                    <li/>
                 </ul>
             </div>
         </div>
         <div class="form-group">
             <label for="descriptionRecipe">Description</label>
-            <textarea th:field="*{description}" class="form-control" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'" id="descriptionRecipe" rows="3" maxlength="350"></textarea>
+            <textarea class="form-control" id="descriptionRecipe" name="description" rows="3" maxlength="350"></textarea>
             <div class="invalid-feedback">
                 <ul>
-                    <li th:each="err : ${#fields.errors('description')}" th:text="${err}"/>
+                    <li/>
                 </ul>
             </div>
         </div>
         <div class="form-group">
             <label for="imageRecipe">Choose image</label>
-            <input name="imageRecipe" type="file" class="form-control-file" id="imageRecipe">
+            <input name="image" type="file" class="form-control-file" id="imageRecipe">
         </div>
         <div class="form-row">
             <div class="form-group col-md-6">
-                <label for="exampleFormControlSelect1">Difficulty</label>
-                <select th:field="*{difficulty}" class="form-control" id="exampleFormControlSelect1">
+                <label for="difficulty">Difficulty</label>
+                <select class="form-control" id="difficulty" name="difficulty">
                     <option th:each="difficulty : ${T(com.portfolio.recipebook.model.Difficulty).values()}"
                     th:value="${difficulty}" th:text="${difficulty}"></option>
                 </select>
@@ -48,17 +46,18 @@
             <div class="form-group col-md-6">
                 <label for="cookTimeRecipe">Cook time</label>
                 <div class="input-group">
-                    <input th:field="*{cookTime}" type="text" class="form-control" th:classappend="${#fields.hasErrors('cookTime')} ? 'is-invalid'" id="cookTimeRecipe" placeholder="Example">
+                    <input type="text" class="form-control" id="cookTimeRecipe" name="cookTime" placeholder="Example">
                     <div class="invalid-feedback">
                         <ul>
-                            <li th:each="err : ${#fields.errors('cookTime')}" th:text="${err}"/>
+                            <li/>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Next step</button>
+        <button id="submitBtn" type="button" class="btn btn-primary">Next step</button>
     </form>
 </div>
+<script th:src="@{/js/recipe/form.js}"></script>
 </body>
 </html>

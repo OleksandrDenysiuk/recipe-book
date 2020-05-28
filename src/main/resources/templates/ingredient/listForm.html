@@ -17,7 +17,7 @@
         </button>
     </p>
     <form id="form" method="post">
-        <input type="hidden" id=""/>
+        <input type="hidden" id="recipeId" th:value="${recipe.id}"/>
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
                 <div class="alert alert-danger">
@@ -50,7 +50,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" id="submitBtn" class="btn btn-primary">Submit</button>
             </div>
         </div>
     </form>
@@ -70,15 +70,15 @@
             <td th:text="${ingredient.name}"></td>
             <td th:text="${ingredient.amount}"></td>
             <td th:text="${ingredient.measure}"></td>
-            <td><a th:href="@{ingredient/__${ingredient.id}__/delete}" class="text-danger">Delete</a></td>
+            <td><a th:href="@{/recipes/__${recipe.id}__/ingredients/__${ingredient.id}__}" id="delete" class="text-danger">Delete</a></td>
         </tr>
         </tbody>
     </table>
     <h2 class="text-muted text-center" th:if="${recipe.ingredients.isEmpty()}">
         List is Empty
     </h2>
-    <a class="btn btn-primary mb-5" th:href="@{/recipe/__${recipe.id}__/edit}" role="button">Previous</a>
-    <a class="btn btn-primary mb-5" th:href="@{/recipe/__${recipe.id}__/manual}" role="button">Next</a>
+    <a class="btn btn-primary mb-5" th:href="@{/recipes/__${recipe.id}__/edit}" role="button">Previous</a>
+    <a class="btn btn-primary mb-5" th:href="@{/recipes/__${recipe.id}__/steps}" role="button">Next</a>
 </div>
 <script th:src="@{/js/ingredient/ingredientPage.js}"></script>
 </body>

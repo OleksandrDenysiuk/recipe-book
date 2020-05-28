@@ -12,9 +12,7 @@
             <h1>All my recipes!</h1>
         </div>
         <div class="p-2">
-            <button type="button" class="btn btn-outline-primary btn-lg" onclick="location.href='/recipe/new'">New
-                recipe
-            </button>
+            <a type="button" class="btn btn-outline-primary btn-lg" href="/recipes/form">New recipe</a>
         </div>
     </div>
     <div class="row mb-2">
@@ -22,13 +20,13 @@
         <div th:object="${recipe}" th:each="recipe : ${recipes}" class="col-md-6">
             <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col pl-4 pr-4 pt-4 pb-3 d-flex flex-column position-static">
-                    <h3 class="mb-0 text-break" th:text="*{title}">Title</h3>
+                    <h3 class="mb-0 text-break" id="title" th:text="*{title}">Title</h3>
                     <div class="d-flex">
                         <strong th:replace="~{fragments/difficulty :: difficulty(*{difficulty.toString()})}"></strong>
                         <div class="mb-1 text-muted" th:text="'Cook time: ' + *{cookTime} + ' min'">Cook time</div>
                     </div>
                     <p class="card-text mb-auto text-break recipe-list-text" th:text="*{description}"></p>
-                    <a th:href="@{/recipe/__${recipe.id}__}" class="stretched-link">View details</a>
+                    <a th:href="@{/recipes/__${recipe.id}__}" class="stretched-link">View details</a>
                 </div>
                 <div class="col-auto d-none d-lg-block recipe-list-image">
                     <img class="recipe-list-image" th:src="@{'/recipe/' + ${recipe.id} + '/image'}">

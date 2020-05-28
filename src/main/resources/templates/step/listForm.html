@@ -7,41 +7,38 @@
 </head>
 <body>
 <div class="container">
-
     <h1 class="title text-center">How to cook it</h1>
     <br/>
-    <form th:object="${step}" method="post" th:action="@{/recipe/__${recipe.id}__/manual/step/new}"
-          enctype="multipart/form-data">
+
         <p class="text-center">
             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseStepForm"
                     aria-expanded="false" aria-controls="collapseStepForm">
                 New step
             </button>
         </p>
-        <div id="collapseStepForm" th:class="${#fields.hasErrors('*')}
-                                ? 'collapse show' : 'collapse'">
+    <input type="hidden" id="recipeId" th:value="${recipe.id}">
+    <form id="form" method="post" enctype="multipart/form-data">
+        <div id="collapseStepForm">
             <div class="card card-body">
-                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                <div class="alert alert-danger">
                     <p class="mb-0">Please Correct Errors Below</p>
                 </div>
                 <div class="form-group">
                     <label for="descriptionStep">Description</label>
-                    <textarea th:field="*{description}" class="form-control" id="descriptionStep" rows="3"
-                              maxlength="350" th:class="${#fields.hasErrors('description')}
-                                ? 'form-control is-invalid' : 'form-control'"></textarea>
+                    <textarea class="form-control" id="descriptionStep" rows="3"
+                              maxlength="350" name="description"></textarea>
                     <div class="invalid-feedback">
                         <ul>
-                            <li th:each="err : ${#fields.errors('description')}" th:text="${err}"/>
+                            <li/>
                         </ul>
                     </div>
                 </div>
                 <div class="custom-file mb-3">
-                    <input name="imageStep" type="file" class="custom-file-input is-invalid" id="customImage"
-                           th:class="${#fields.hasErrors('image')} ? 'custom-file-input is-invalid' : 'custom-file-input'">
+                    <input name="image" type="file" class="custom-file-input is-invalid" id="customImage">
                     <label class="custom-file-label" for="customImage">Choose image</label>
                     <div class="invalid-feedback">
                         <ul>
-                            <li th:each="err : ${#fields.errors('image')}" th:text="${err}"/>
+                            <li/>
                         </ul>
                     </div>
                 </div>
@@ -72,15 +69,15 @@
                         th:data-description="${step.description}" th:data-recipe="${recipe.id}"
                 th:data-step="${step.id}">Edit</button>
             </td>
-            <td><a th:href="@{manual/step/__${step.id}__/delete}" class="text-danger">Delete</a></td>
+            <td><a id="delete" th:href="@{/steps/__${step.id}__}" class="text-danger">Delete</a></td>
         </tr>
         </tbody>
     </table>
     <h2 class="text-muted text-center" th:if="${recipe.steps.size() == 0}">
         List is Empty
     </h2>
-    <a class="btn btn-primary mb-5" th:href="@{/recipe/__${recipe.id}__/ingredients}" role="button">Previous</a>
-    <a class="btn btn-primary mb-5" th:href="@{/recipe/all}" role="button">Save recipe</a>
+    <a class="btn btn-primary mb-5" th:href="@{/recipes/__${recipe.id}__/ingredients}" role="button">Previous</a>
+    <a class="btn btn-primary mb-5" href="/recipes" role="button">Save recipe</a>
 </div>
 
 
@@ -116,5 +113,6 @@
     </div>
 </div>
 <script th:src="@{/js/modal_step_edit.js}"></script>
+<script th:src="@{/js/step/stepPage.js}"></script>
 </body>
 </html>
