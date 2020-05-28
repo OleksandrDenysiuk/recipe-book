@@ -1,12 +1,15 @@
 package com.portfolio.recipebook.service;
 
-import com.portfolio.recipebook.model.Recipe;
+import com.portfolio.recipebook.command.RecipeCommand;
+import com.portfolio.recipebook.dto.RecipeDto;
 
-import java.util.Set;
+import java.util.List;
 
 public interface RecipeService{
-    Set<Recipe> findAll();
-    Recipe findById(Long id);
-    Recipe save(Recipe object);
-    void deleteById(Long id);
+    List<RecipeDto> getAll();
+    RecipeDto create(RecipeCommand recipeCommand);
+    RecipeDto update(RecipeCommand recipeCommand);
+    void delete(Long id);
+
+    RecipeDto getById(Long recipeId);
 }
