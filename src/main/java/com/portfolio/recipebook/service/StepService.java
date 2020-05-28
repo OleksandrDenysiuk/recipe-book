@@ -10,7 +10,9 @@ public interface StepService{
 
     StepDto update(StepCommand stepCommand, Long recipeId);
 
+    void delete(Long stepId, Long recipeId);
+
     List<StepDto> getAll(Long recipeId);
 
-    void delete(Long stepId, Long recipeId);
+    StepDto getByIdAndRecipeId(Long stepId, Long recipeId);
 }

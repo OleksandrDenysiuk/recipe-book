@@ -49,6 +49,7 @@ public class StepServiceImpl implements StepService {
     }
 
     @Override
+    @Transactional
     public StepDto update(StepCommand stepCommand, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if (recipeOptional.isEmpty()) {
@@ -63,7 +64,7 @@ public class StepServiceImpl implements StepService {
                 throw new RuntimeException("Recipe was not founded with id: " + recipeId);
             } else {
                 Step step = stepOptional.get();
-                if (stepCommand.getImage() != null) {
+                if (stepCommand.getImage().getSize() != 0) {
                     step.setImage(ImageMapper.toByteArray(stepCommand.getImage()));
                 }
                 step.setDescription(stepCommand.getDescription());
@@ -85,6 +86,25 @@ public class StepServiceImpl implements StepService {
                     .map(StepMapper::toDto)
                     .sorted(Comparator.comparing(StepDto::getId).reversed())
                     .collect(Collectors.toList());
+        }
+    }
+
+    @Override
+    @Transactional
+    public StepDto getByIdAndRecipeId(Long stepId, Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isEmpty()) {
+            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
+        } else {
+            Recipe recipe = recipeOptional.get();
+            Optional<Step> optionalStep = recipe.getSteps().stream()
+                    .filter(step -> stepId.equals(step.getId()))
+                    .findFirst();
+            if(optionalStep.isPresent()){
+                return StepMapper.toDto(optionalStep.get());
+            }else {
+                throw  new RuntimeException("Step not found");
+            }
         }
     }
 
