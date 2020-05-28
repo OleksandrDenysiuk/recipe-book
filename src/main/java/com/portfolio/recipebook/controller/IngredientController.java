@@ -19,6 +19,6 @@ public class IngredientController {
     public String getIngredientsPage(@PathVariable("recipeId") Long recipeId,
                                      Model model) {
         model.addAttribute("recipe", recipeService.getById(recipeId));
-        return "ingredient/listAndForm";
+        return "ingredient/listForm";
     }
 }

@@ -14,9 +14,9 @@ public class StepController {
         this.recipeService = recipeService;
     }
 
-    @GetMapping("recipes/{recipeId}/steps")
+    @GetMapping("/recipes/{recipeId}/steps")
     public String getStepsPage(@PathVariable("recipeId") Long recipeId, Model model) {
         model.addAttribute("recipe", recipeService.getById(recipeId));
-        return "manual/indexAndFromStep";
+        return "step/listForm";
     }
 }

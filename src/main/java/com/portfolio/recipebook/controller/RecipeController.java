@@ -28,10 +28,15 @@ public class RecipeController {
         return "recipe/index";
     }
 
-    @GetMapping("/recipes/{recipeId}/edit")
-    public String recipeForm(@PathVariable("recipeId") Long recipeId,
+    @GetMapping("/recipes/{recipeId}/form")
+    public String recipeEditForm(@PathVariable("recipeId") Long recipeId,
                              Model model) {
         model.addAttribute("recipe", recipeService.getById(recipeId));
+        return "recipe/form";
+    }
+
+    @GetMapping("/recipes/form")
+    public String recipeForm() {
         return "recipe/form";
     }
 }
