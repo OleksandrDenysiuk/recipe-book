@@ -28,14 +28,14 @@ public class IngredientRestController {
         return ingredientService.getAll(recipeId);
     }
 
-    @PostMapping("/recipes/{recipeId}/ingredients/create")
+    @PostMapping("/recipes/{recipeId}/ingredients")
     @ResponseStatus(HttpStatus.CREATED)
     public IngredientDto create(@PathVariable("recipeId") Long recipeId,
                                               @RequestBody IngredientCommand ingredientCommand) {
         return ingredientService.create(ingredientCommand, recipeId);
     }
 
-    @DeleteMapping("/recipes/{recipeId}/ingredients/{ingredientId}/delete")
+    @DeleteMapping("/recipes/{recipeId}/ingredients/{ingredientId}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable("recipeId") String recipeId,
                        @PathVariable("ingredientId") String ingredientId) {

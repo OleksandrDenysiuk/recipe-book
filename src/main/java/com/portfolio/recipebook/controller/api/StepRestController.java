@@ -11,11 +11,11 @@ import java.util.List;
 
 @Slf4j
 @RestController
-public class StepController {
+public class StepRestController {
 
     private final StepService stepService;
 
-    public StepController(StepService stepService) {
+    public StepRestController(StepService stepService) {
         this.stepService = stepService;
     }
 
@@ -25,21 +25,21 @@ public class StepController {
         return stepService.getAll(recipeId);
     }
 
-    @PostMapping("/api/recipes/{recipeId}/steps/create")
+    @PostMapping("/api/recipes/{recipeId}/steps")
     @ResponseStatus(HttpStatus.OK)
     public StepDto create(@PathVariable("recipeId") Long recipeId,
                           @ModelAttribute StepCommand stepCommand) {
         return stepService.create(stepCommand,recipeId);
     }
 
-    @DeleteMapping("/api/recipes/{recipeId}/steps/{stepId}/delete")
+    @DeleteMapping("/api/recipes/{recipeId}/steps/{stepId}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable("recipeId") Long recipeId,
                          @PathVariable("stepId") Long stepId) {
         stepService.delete(stepId, recipeId);
     }
 
-    @PutMapping("recipe/{recipeId}/manual/step/{stepId}/edit")
+    @PutMapping("recipe/{recipeId}/manual/step/{stepId}")
     @ResponseStatus(HttpStatus.OK)
     public StepDto edit(@PathVariable("recipeId") Long recipeId,
                        @PathVariable("stepId") Long stepId,
