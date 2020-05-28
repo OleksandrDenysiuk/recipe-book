@@ -1,7 +1,5 @@
-package com.portfolio.recipebook.controller;
+package com.portfolio.recipebook.controller.api;
 
-import com.portfolio.recipebook.model.Recipe;
-import com.portfolio.recipebook.model.Step;
 import com.portfolio.recipebook.service.RecipeService;
 import com.portfolio.recipebook.service.StepService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -27,8 +25,8 @@ public class ImageController {
 
     @GetMapping("recipe/{recipeId}/image")
     public void renderImageRecipeFromDB(@PathVariable("recipeId") String recipeId, HttpServletResponse response) throws IOException {
-        Recipe recipe = recipeService.findById(Long.valueOf(recipeId));
-        renderImage(response, recipe.getImage());
+        //Recipe recipe = recipeService.findById(Long.valueOf(recipeId));
+        //renderImage(response, recipe.getImage());
     }
 
 
@@ -36,8 +34,8 @@ public class ImageController {
     public void renderImageStepFromDB(@PathVariable("recipeId") String recipeId,
                                       @PathVariable("stepId") String stepId,
                                       HttpServletResponse response) throws IOException {
-        Step step = stepService.findOne(Long.valueOf(stepId),Long.valueOf(recipeId));
-        renderImage(response, step.getImage());
+        //Step step = stepService.findOne(Long.valueOf(stepId),Long.valueOf(recipeId));
+        //renderImage(response, step.getImage());
     }
 
     private void renderImage(HttpServletResponse response, Byte[] image) throws IOException {

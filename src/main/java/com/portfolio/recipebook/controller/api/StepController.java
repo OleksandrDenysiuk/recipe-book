@@ -1,4 +1,4 @@
-package com.portfolio.recipebook.controller;
+package com.portfolio.recipebook.controller.api;
 
 import com.portfolio.recipebook.command.StepCommand;
 import com.portfolio.recipebook.dto.StepDto;

@@ -1,4 +1,4 @@
-package com.portfolio.recipebook.controller;
+package com.portfolio.recipebook.controller.api;
 
 import com.portfolio.recipebook.command.IngredientCommand;
 import com.portfolio.recipebook.dto.IngredientDto;
@@ -24,7 +24,7 @@ public class IngredientController {
 
     @GetMapping("/recipes/{recipeId}/ingredients")
     @ResponseStatus(HttpStatus.OK)
-    public List<IngredientDto> getSet(@PathVariable("recipeId") Long recipeId) {
+    public List<IngredientDto> getIngredientList(@PathVariable("recipeId") Long recipeId) {
         return ingredientService.getAll(recipeId);
     }
 
