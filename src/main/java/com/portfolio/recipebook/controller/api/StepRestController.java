@@ -25,6 +25,13 @@ public class StepRestController {
         return stepService.getAll(recipeId);
     }
 
+    @GetMapping("/api/recipes/{recipeId}/steps/{stepId}")
+    @ResponseStatus(HttpStatus.OK)
+    public StepDto getStepList(@PathVariable("recipeId") Long recipeId,
+                                     @PathVariable("stepId") Long stepId) {
+        return stepService.getByIdAndRecipeId(stepId, recipeId);
+    }
+
     @PostMapping("/api/recipes/{recipeId}/steps")
     @ResponseStatus(HttpStatus.OK)
     public StepDto create(@PathVariable("recipeId") Long recipeId,
@@ -39,7 +46,7 @@ public class StepRestController {
         stepService.delete(stepId, recipeId);
     }
 
-    @PutMapping("recipe/{recipeId}/manual/step/{stepId}")
+    @PutMapping("/api/recipes/{recipeId}/steps/{stepId}")
     @ResponseStatus(HttpStatus.OK)
     public StepDto edit(@PathVariable("recipeId") Long recipeId,
                        @PathVariable("stepId") Long stepId,
