@@ -21,26 +21,17 @@
         <form id="form" method="post" enctype="multipart/form-data">
 
             <div class="card card-body">
-                <div class="alert alert-danger">
-                    <p class="mb-0">Please Correct Errors Below</p>
-                </div>
                 <div class="form-group">
-                    <label for="descriptionStep">Description</label>
-                    <textarea class="form-control" id="descriptionStep" rows="3"
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" rows="3"
                               maxlength="350" name="description"></textarea>
                     <div class="invalid-feedback">
-                        <ul>
-                            <li/>
-                        </ul>
                     </div>
                 </div>
                 <div class="custom-file mb-3">
-                    <input name="image" type="file" class="custom-file-input is-invalid" id="customImage">
-                    <label class="custom-file-label" for="customImage">Choose image</label>
+                    <input name="image" type="file" class="custom-file-input" id="image">
+                    <label class="custom-file-label" for="image">Choose image</label>
                     <div class="invalid-feedback">
-                        <ul>
-                            <li/>
-                        </ul>
                     </div>
                 </div>
                 <br/>
@@ -72,7 +63,7 @@
                         th:data-step="${step.id}">Edit
                 </button>
             </td>
-            <td><a id="delete" th:href="@{/steps/__${step.id}__}" class="text-danger">Delete</a></td>
+            <td><a th:href="@{/steps/__${step.id}__}" class="text-danger delete-link">Delete</a></td>
         </tr>
         </tbody>
     </table>
