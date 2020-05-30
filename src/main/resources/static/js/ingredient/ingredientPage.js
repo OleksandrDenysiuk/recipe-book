@@ -1,8 +1,8 @@
 $('#submitBtn').click(function () {
     var data = {
-        name: $('#nameIngredient').val(),
-        amount: $('#amountIngredient').val(),
-        measure: $('#measureIngredient').val()
+        name: $('#name').val(),
+        amount: $('#amount').val(),
+        measure: $('#measure').val()
     };
 
     var url = '/api/recipes/' + $('#recipeId').val() + '/ingredients';
@@ -12,13 +12,26 @@ $('#submitBtn').click(function () {
         url: url,
         contentType: "application/json",
         data: JSON.stringify(data),
-        success: function(response) {
+        error: function (response) {
+            var errors = response.responseJSON;
+
+            $( ".is-invalid" ).each(function( index ) {
+                $(this).toggleClass('is-invalid');
+            });
+
+            $.each(errors, function( index, value ) {
+                var input = $('#' + index);
+                input.addClass('is-invalid');
+                input.closest('div').find('.invalid-feedback').text(value);
+            });
+        },
+        success: function() {
             location.reload();
         }
     });
 });
 
-$('#delete').click(function (event) {
+$('.delete-link').click(function (event) {
     event.preventDefault();
     var url = '/api' + $(this).attr('href');
     $.ajax({
