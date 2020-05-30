@@ -29,6 +29,19 @@ $('#form').submit(function (e) {
         data: dataFrom,
         success: function (response) {
             location.reload();
+        },
+        error: function (response) {
+            var errors = response.responseJSON;
+
+            $( ".is-invalid" ).each(function( index ) {
+                $(this).toggleClass('is-invalid');
+            });
+
+            $.each(errors, function( index, value ) {
+                var input = $('#' + index);
+                input.addClass('is-invalid');
+                input.closest('div').find('.invalid-feedback').text(value);
+            });
         }
     });
 });
@@ -54,7 +67,7 @@ $('#editForm').submit(function (e) {
     });
 });
 
-$('#delete').click(function (event) {
+$('.delete-link').click(function (event) {
     event.preventDefault();
 
     var url = '/api/recipes/'+ $('#recipeId').val() + $(this).attr('href');
