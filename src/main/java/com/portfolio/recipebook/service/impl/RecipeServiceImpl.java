@@ -59,6 +59,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    @Transactional
     public RecipeDto update(RecipeCommand recipeCommand) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeCommand.getId());
         if (recipeOptional.isPresent()) {
