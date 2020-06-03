@@ -1,5 +1,6 @@
 package com.portfolio.recipebook.command;
 
+import com.portfolio.recipebook.validator.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +34,8 @@ public class RecipeCommand {
     @Max(360)
     private int cookTime;
 
+    @Image
     private MultipartFile image;
-
+    
     private String difficulty;
 }
