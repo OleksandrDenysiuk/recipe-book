@@ -91,13 +91,17 @@
                 <!-- Form -->
                 <form method='post' action='' id="editForm" enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="descriptionStepModal">Description</label>
-                        <textarea name="description" class="form-control" id="descriptionStepModal" rows="3"
+                        <label for="descriptionModal">Description</label>
+                        <textarea name="description" class="form-control" id="descriptionModal" rows="3"
                                   maxlength="350"></textarea>
+                        <div class="invalid-feedback">
+                        </div>
                     </div>
                     <div class="custom-file mb-3">
-                        <input name="image" type="file" class="custom-file-input" id="customImageModal">
-                        <label class="custom-file-label" for="customImageModal">Choose image</label>
+                        <input name="image" type="file" class="custom-file-input" id="imageModal">
+                        <label class="custom-file-label" for="imageModal">Choose image</label>
+                        <div class="invalid-feedback">
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Save changes</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
