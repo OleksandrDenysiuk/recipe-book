@@ -63,6 +63,19 @@ $('#editForm').submit(function (e) {
         data: dataFrom,
         success: function (response) {
             location.reload();
+        },
+        error: function (response) {
+            var errors = response.responseJSON;
+
+            $( ".is-invalid" ).each(function( index ) {
+                $(this).toggleClass('is-invalid');
+            });
+
+            $.each(errors, function( index, value ) {
+                var input = $('#' + index + 'Modal');
+                input.addClass('is-invalid');
+                input.closest('div').find('.invalid-feedback').text(value);
+            });
         }
     });
 });

@@ -6,7 +6,6 @@ $(function () {
             type: 'GET',
             url: '/api/recipes/' + recipeId,
             success: function (recipe) {
-                console.log(recipe);
                 setDataForm(recipe);
             }
         })
@@ -15,9 +14,9 @@ $(function () {
 
 
 function setDataForm(recipe) {
-    $('#titleRecipe').val(recipe.title);
-    $('#descriptionRecipe').val(recipe.description);
-    $('#cookTimeRecipe').val(recipe.cookTime);
+    $('#title').val(recipe.title);
+    $('#description').val(recipe.description);
+    $('#cookTime').val(recipe.cookTime);
     $('#difficulty').val(recipe.difficulty);
 }
 
@@ -25,7 +24,7 @@ $('#submitBtn').click(function () {
 
     var dataForm = new FormData($('#form')[0]);
 
-    console.log(recipeId);
+    console.log(dataForm);
 
     if (recipeId === undefined) {
         createRecipe(dataForm);
@@ -45,6 +44,19 @@ function createRecipe(dataForm) {
         data: dataForm,
         success: function (response) {
             location.href = '/recipes/' + response.id + '/ingredients';
+        },
+        error: function (response) {
+            var errors = response.responseJSON;
+
+            $( ".is-invalid" ).each(function( index ) {
+                $(this).toggleClass('is-invalid');
+            });
+
+            $.each(errors, function( index, value ) {
+                var input = $('#' + index);
+                input.addClass('is-invalid');
+                input.closest('div').find('.invalid-feedback').text(value);
+            });
         }
     });
 }
@@ -60,6 +72,19 @@ function updateRecipe(dataForm, recipeId) {
         data: dataForm,
         success: function (response) {
             location.href = '/recipes/' + response.id + '/ingredients';
+        },
+        error: function (response) {
+            var errors = response.responseJSON;
+
+            $( ".is-invalid" ).each(function( index ) {
+                $(this).toggleClass('is-invalid');
+            });
+
+            $.each(errors, function( index, value ) {
+                var input = $('#' + index);
+                input.addClass('is-invalid');
+                input.closest('div').find('.invalid-feedback').text(value);
+            });
         }
     });
 }
