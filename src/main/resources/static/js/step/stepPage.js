@@ -22,7 +22,7 @@ $('#form').submit(function (e) {
     $.ajax({
         type: "POST",
         enctype: 'multipart/form-data',
-        processData: false,  // Important!
+        processData: false,
         contentType: false,
         cache: false,
         url: url,
