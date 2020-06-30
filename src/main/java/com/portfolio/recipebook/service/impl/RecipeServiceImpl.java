@@ -2,6 +2,7 @@ package com.portfolio.recipebook.service.impl;
 
 import com.portfolio.recipebook.command.RecipeCommand;
 import com.portfolio.recipebook.dto.RecipeDto;
+import com.portfolio.recipebook.exception.EntityNotFoundException;
 import com.portfolio.recipebook.mapper.ImageMapper;
 import com.portfolio.recipebook.mapper.RecipeMapper;
 import com.portfolio.recipebook.model.Difficulty;
@@ -73,7 +74,7 @@ public class RecipeServiceImpl implements RecipeService {
             }
             return RecipeMapper.toDto(recipeRepository.save(recipe));
         } else {
-            throw new RuntimeException("Recipe not found");
+            throw new EntityNotFoundException("Recipe", recipeCommand.getId());
         }
     }
 
@@ -83,7 +84,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (recipeOptional.isPresent()) {
             recipeRepository.delete(recipeOptional.get());
         } else {
-            throw new RuntimeException("Recipe not found");
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
     }
 
@@ -94,7 +95,7 @@ public class RecipeServiceImpl implements RecipeService {
         if (recipeOptional.isPresent()) {
             return RecipeMapper.toDto(recipeOptional.get());
         } else {
-            throw new RuntimeException("Recipe not found");
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
     }
 

@@ -2,6 +2,7 @@ package com.portfolio.recipebook.service.impl;
 
 import com.portfolio.recipebook.command.IngredientCommand;
 import com.portfolio.recipebook.dto.IngredientDto;
+import com.portfolio.recipebook.exception.EntityNotFoundException;
 import com.portfolio.recipebook.mapper.IngredientMapper;
 import com.portfolio.recipebook.model.Ingredient;
 import com.portfolio.recipebook.model.MeasureOfIngredient;
@@ -40,7 +41,7 @@ public class IngredientServiceImpl implements IngredientService {
                     .sorted(Comparator.comparing(IngredientDto::getId).reversed())
                     .collect(Collectors.toList());
         }else {
-            throw new RuntimeException("Recipe not found");
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
 
     }
@@ -58,16 +59,14 @@ public class IngredientServiceImpl implements IngredientService {
             recipe.getIngredients().add(ingredient);
             return IngredientMapper.toDto(ingredientRepository.save(ingredient));
         }else{
-            throw new RuntimeException("Recipe not found");
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
     }
 
     @Override
     public void delete(Long ingredientId, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()){
-            throw new RuntimeException("Recipe was not founded by id: " + recipeId);
-        }else{
+        if (recipeOptional.isPresent()){
             Recipe recipe = recipeOptional.get();
 
             Optional<Ingredient> ingredientOptional = recipe
@@ -76,13 +75,15 @@ public class IngredientServiceImpl implements IngredientService {
                     .filter(ingredient -> ingredient.getId().equals(ingredientId))
                     .findFirst();
 
-            if (ingredientOptional.isEmpty()){
-                throw new RuntimeException("Ingredient was not founded by id: " + ingredientId);
-            }else {
+            if (ingredientOptional.isPresent()){
                 Ingredient ingredient = ingredientOptional.get();
                 recipe.getIngredients().remove(ingredient);
                 ingredientRepository.delete(ingredient);
+            }else {
+                throw new EntityNotFoundException("Ingredient", ingredientId);
             }
+        }else{
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
     }
 }

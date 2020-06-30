@@ -2,6 +2,7 @@ package com.portfolio.recipebook.service.impl;
 
 import com.portfolio.recipebook.command.StepCommand;
 import com.portfolio.recipebook.dto.StepDto;
+import com.portfolio.recipebook.exception.EntityNotFoundException;
 import com.portfolio.recipebook.mapper.ImageMapper;
 import com.portfolio.recipebook.mapper.StepMapper;
 import com.portfolio.recipebook.model.Recipe;
@@ -32,9 +33,7 @@ public class StepServiceImpl implements StepService {
     @Transactional
     public StepDto create(StepCommand stepCommand, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()) {
-            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
-        } else {
+        if (recipeOptional.isPresent()) {
             Recipe recipe = recipeOptional.get();
 
             Step step = new Step();
@@ -45,6 +44,9 @@ public class StepServiceImpl implements StepService {
             recipe.addStep(step);
 
             return StepMapper.toDto(stepRepository.save(step));
+        } else {
+            throw new EntityNotFoundException("Recipe", recipeId);
+
         }
     }
 
@@ -53,23 +55,23 @@ public class StepServiceImpl implements StepService {
     public StepDto update(StepCommand stepCommand, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if (recipeOptional.isEmpty()) {
-            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
-        } else {
             Recipe recipe = recipeOptional.get();
             Optional<Step> stepOptional = recipe.getSteps()
                     .stream()
                     .filter(step -> step.getId().equals(stepCommand.getId()))
                     .findFirst();
-            if (stepOptional.isEmpty()) {
-                throw new RuntimeException("Recipe was not founded with id: " + recipeId);
-            } else {
+            if (stepOptional.isPresent()) {
                 Step step = stepOptional.get();
                 if (stepCommand.getImage().getSize() != 0) {
                     step.setImage(ImageMapper.toByteArray(stepCommand.getImage()));
                 }
                 step.setDescription(stepCommand.getDescription());
                 return StepMapper.toDto(stepRepository.save(step));
+            } else {
+                throw new EntityNotFoundException("Step", stepCommand.getId());
             }
+        } else {
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
     }
 
@@ -77,15 +79,15 @@ public class StepServiceImpl implements StepService {
     @Transactional
     public List<StepDto> getAll(Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()) {
-            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
-        } else {
+        if (recipeOptional.isPresent()) {
             Recipe recipe = recipeOptional.get();
             return recipe.getSteps()
                     .stream()
                     .map(StepMapper::toDto)
                     .sorted(Comparator.comparing(StepDto::getId).reversed())
                     .collect(Collectors.toList());
+        } else {
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
     }
 
@@ -93,18 +95,18 @@ public class StepServiceImpl implements StepService {
     @Transactional
     public StepDto getByIdAndRecipeId(Long stepId, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()) {
-            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
-        } else {
+        if (recipeOptional.isPresent()) {
             Recipe recipe = recipeOptional.get();
             Optional<Step> optionalStep = recipe.getSteps().stream()
-                    .filter(step -> stepId.equals(step.getId()))
+                    .filter(step -> step.getId().equals(stepId))
                     .findFirst();
-            if(optionalStep.isPresent()){
+            if (optionalStep.isPresent()) {
                 return StepMapper.toDto(optionalStep.get());
-            }else {
-                throw  new RuntimeException("Step not found");
+            } else {
+                throw new EntityNotFoundException("Step", stepId);
             }
+        } else {
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
     }
 
@@ -112,21 +114,21 @@ public class StepServiceImpl implements StepService {
     @Transactional
     public void delete(Long stepId, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()) {
-            throw new RuntimeException("Recipe was not founded with id: " + recipeId);
-        } else {
+        if (recipeOptional.isPresent()) {
             Recipe recipe = recipeOptional.get();
             Optional<Step> stepOptional = recipe.getSteps()
                     .stream()
                     .filter(step -> step.getId().equals(stepId))
                     .findFirst();
             if (stepOptional.isEmpty()) {
-                throw new RuntimeException("Recipe was not founded with id: " + recipeId);
+                throw new EntityNotFoundException("Step", stepId);
             } else {
                 Step step = stepOptional.get();
                 recipe.getSteps().remove(step);
                 stepRepository.delete(step);
             }
+        } else {
+            throw new EntityNotFoundException("Recipe", recipeId);
         }
     }
 }
