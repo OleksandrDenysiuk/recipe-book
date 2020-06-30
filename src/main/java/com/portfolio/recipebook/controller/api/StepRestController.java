@@ -35,40 +35,40 @@ public class StepRestController {
 
     @GetMapping("/api/recipes/{recipeId}/steps/{stepId}")
     @ResponseStatus(HttpStatus.OK)
-    public StepDto getStepList(@PathVariable("recipeId") Long recipeId,
-                                     @PathVariable("stepId") Long stepId) {
+    public StepDto getOne(@PathVariable("recipeId") Long recipeId,
+                          @PathVariable("stepId") Long stepId) {
         return stepService.getByIdAndRecipeId(stepId, recipeId);
     }
 
     @PostMapping("/api/recipes/{recipeId}/steps")
     @ResponseStatus(HttpStatus.CREATED)
     public StepDto create(@PathVariable("recipeId") Long recipeId,
-                          @Valid StepCommand stepCommand){
-        return stepService.create(stepCommand,recipeId);
+                          @Valid StepCommand stepCommand) {
+        return stepService.create(stepCommand, recipeId);
     }
 
     @DeleteMapping("/api/recipes/{recipeId}/steps/{stepId}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable("recipeId") Long recipeId,
-                         @PathVariable("stepId") Long stepId) {
+                       @PathVariable("stepId") Long stepId) {
         stepService.delete(stepId, recipeId);
     }
 
     @PutMapping("/api/recipes/{recipeId}/steps/{stepId}")
     @ResponseStatus(HttpStatus.OK)
     public StepDto edit(@PathVariable("recipeId") Long recipeId,
-                       @PathVariable("stepId") Long stepId,
-                       StepCommand stepCommand) {
+                        @PathVariable("stepId") Long stepId,
+                        @Valid StepCommand stepCommand) {
         stepCommand.setId(stepId);
         return stepService.update(stepCommand, recipeId);
     }
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public @ResponseBody Map<String, String> handleException(BindException e,
-                                                             HttpServletRequest request,
-                                                             HttpServletResponse response)
-    {
+    public @ResponseBody
+    Map<String, String> handleException(BindException e,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
         Map<String, String> errorsMap = new HashMap<>();
 
         for (ObjectError error : e.getBindingResult().getAllErrors()) {
