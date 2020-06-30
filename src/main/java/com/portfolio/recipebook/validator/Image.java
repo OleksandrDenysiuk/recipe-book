@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = ImageValidator.class)
 @Documented
 public @interface Image {
-    String message() default "Author is not allowed.";
+    String message() default "must not be empty";
 
     Class<?>[] groups() default {};
 
