@@ -5,17 +5,10 @@ import com.portfolio.recipebook.dto.StepDto;
 import com.portfolio.recipebook.service.StepService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -61,22 +54,6 @@ public class StepRestController {
                         @Valid StepCommand stepCommand) {
         stepCommand.setId(stepId);
         return stepService.update(stepCommand, recipeId);
-    }
-
-    @ExceptionHandler(BindException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public @ResponseBody
-    Map<String, String> handleException(BindException e,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response) {
-        Map<String, String> errorsMap = new HashMap<>();
-
-        for (ObjectError error : e.getBindingResult().getAllErrors()) {
-            FieldError fieldError = (FieldError) error;
-            errorsMap.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-
-        return errorsMap;
     }
 
 }
