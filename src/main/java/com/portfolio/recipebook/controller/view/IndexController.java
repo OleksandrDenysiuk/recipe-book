@@ -1,4 +1,4 @@
-package com.portfolio.recipebook.controller;
+package com.portfolio.recipebook.controller.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

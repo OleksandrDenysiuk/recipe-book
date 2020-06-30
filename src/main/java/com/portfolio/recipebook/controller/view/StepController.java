@@ -1,4 +1,4 @@
-package com.portfolio.recipebook.controller;
+package com.portfolio.recipebook.controller.view;
 
 import com.portfolio.recipebook.service.RecipeService;
 import org.springframework.stereotype.Controller;
