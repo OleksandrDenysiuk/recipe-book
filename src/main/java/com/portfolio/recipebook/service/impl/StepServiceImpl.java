@@ -31,6 +31,41 @@ public class StepServiceImpl implements StepService {
 
     @Override
     @Transactional
+    public List<StepDto> getAllByRecipeId(Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isPresent()) {
+            Recipe recipe = recipeOptional.get();
+            return recipe.getSteps()
+                    .stream()
+                    .map(StepMapper::toDto)
+                    .sorted(Comparator.comparing(StepDto::getId).reversed())
+                    .collect(Collectors.toList());
+        } else {
+            throw new EntityNotFoundException("Recipe", recipeId);
+        }
+    }
+
+    @Override
+    @Transactional
+    public StepDto getOneByIdAndRecipeId(Long stepId, Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isPresent()) {
+            Recipe recipe = recipeOptional.get();
+            Optional<Step> optionalStep = recipe.getSteps().stream()
+                    .filter(step -> step.getId().equals(stepId))
+                    .findFirst();
+            if (optionalStep.isPresent()) {
+                return StepMapper.toDto(optionalStep.get());
+            } else {
+                throw new EntityNotFoundException("Step", stepId);
+            }
+        } else {
+            throw new EntityNotFoundException("Recipe", recipeId);
+        }
+    }
+
+    @Override
+    @Transactional
     public StepDto create(StepCommand stepCommand, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if (recipeOptional.isPresent()) {
@@ -54,7 +89,7 @@ public class StepServiceImpl implements StepService {
     @Transactional
     public StepDto update(StepCommand stepCommand, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isEmpty()) {
+        if (recipeOptional.isPresent()) {
             Recipe recipe = recipeOptional.get();
             Optional<Step> stepOptional = recipe.getSteps()
                     .stream()
@@ -77,41 +112,6 @@ public class StepServiceImpl implements StepService {
 
     @Override
     @Transactional
-    public List<StepDto> getAll(Long recipeId) {
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isPresent()) {
-            Recipe recipe = recipeOptional.get();
-            return recipe.getSteps()
-                    .stream()
-                    .map(StepMapper::toDto)
-                    .sorted(Comparator.comparing(StepDto::getId).reversed())
-                    .collect(Collectors.toList());
-        } else {
-            throw new EntityNotFoundException("Recipe", recipeId);
-        }
-    }
-
-    @Override
-    @Transactional
-    public StepDto getByIdAndRecipeId(Long stepId, Long recipeId) {
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isPresent()) {
-            Recipe recipe = recipeOptional.get();
-            Optional<Step> optionalStep = recipe.getSteps().stream()
-                    .filter(step -> step.getId().equals(stepId))
-                    .findFirst();
-            if (optionalStep.isPresent()) {
-                return StepMapper.toDto(optionalStep.get());
-            } else {
-                throw new EntityNotFoundException("Step", stepId);
-            }
-        } else {
-            throw new EntityNotFoundException("Recipe", recipeId);
-        }
-    }
-
-    @Override
-    @Transactional
     public void delete(Long stepId, Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if (recipeOptional.isPresent()) {
@@ -124,6 +124,7 @@ public class StepServiceImpl implements StepService {
                 throw new EntityNotFoundException("Step", stepId);
             } else {
                 Step step = stepOptional.get();
+                step.setRecipe(null);
                 recipe.getSteps().remove(step);
                 stepRepository.delete(step);
             }

@@ -6,7 +6,7 @@ import com.portfolio.recipebook.dto.IngredientDto;
 import java.util.List;
 
 public interface IngredientService{
-    List<IngredientDto> getAll(Long recipeId);
+    List<IngredientDto> getAllByRecipeId(Long recipeId);
 
     IngredientDto create(IngredientCommand ingredientCommand, Long recipeId);
 

@@ -42,6 +42,18 @@ public class RecipeServiceImpl implements RecipeService {
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    @Transactional
+    public RecipeDto getById(Long recipeId) {
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+        if (recipeOptional.isPresent()) {
+            return RecipeMapper.toDto(recipeOptional.get());
+        } else {
+            throw new EntityNotFoundException("Recipe", recipeId);
+        }
+    }
+
     @Override
     public RecipeDto create(RecipeCommand recipeCommand) throws IOException {
         Recipe recipe = new Recipe();
@@ -83,17 +95,6 @@ public class RecipeServiceImpl implements RecipeService {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if (recipeOptional.isPresent()) {
             recipeRepository.delete(recipeOptional.get());
-        } else {
-            throw new EntityNotFoundException("Recipe", recipeId);
-        }
-    }
-
-    @Override
-    @Transactional
-    public RecipeDto getById(Long recipeId) {
-        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
-        if (recipeOptional.isPresent()) {
-            return RecipeMapper.toDto(recipeOptional.get());
         } else {
             throw new EntityNotFoundException("Recipe", recipeId);
         }

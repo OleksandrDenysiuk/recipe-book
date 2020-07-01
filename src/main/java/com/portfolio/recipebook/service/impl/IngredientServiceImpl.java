@@ -31,7 +31,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public List<IngredientDto> getAll(Long recipeId) {
+    public List<IngredientDto> getAllByRecipeId(Long recipeId) {
         Optional<Recipe> optionalRecipe = recipeRepository.findById(recipeId);
         if(optionalRecipe.isPresent()){
             Recipe recipe = optionalRecipe.get();
@@ -77,6 +77,7 @@ public class IngredientServiceImpl implements IngredientService {
 
             if (ingredientOptional.isPresent()){
                 Ingredient ingredient = ingredientOptional.get();
+                ingredient.setRecipe(null);
                 recipe.getIngredients().remove(ingredient);
                 ingredientRepository.delete(ingredient);
             }else {
