@@ -36,7 +36,7 @@ public class RecipeController {
     }
 
     @GetMapping("/recipes/form")
-    public String recipeForm() {
+    public String recipeCreateForm() {
         return "recipe/form";
     }
 }
