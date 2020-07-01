@@ -46,26 +46,26 @@ class RecipeControllerTest {
 
     @Test
     void recipeIndex() throws Exception {
-        when(recipeService.getById(anyLong())).thenReturn(new RecipeDto());
+        when(recipeService.getOneById(anyLong())).thenReturn(new RecipeDto());
 
         mockMvc.perform(get("/recipes/1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"))
                 .andExpect(view().name("recipe/index"));
 
-        verify(recipeService,times(1)).getById(anyLong());
+        verify(recipeService,times(1)).getOneById(anyLong());
     }
 
     @Test
     void recipeEditForm() throws Exception {
-        when(recipeService.getById(anyLong())).thenReturn(new RecipeDto());
+        when(recipeService.getOneById(anyLong())).thenReturn(new RecipeDto());
 
         mockMvc.perform(get("/recipes/1/form"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"))
                 .andExpect(view().name("recipe/form"));
 
-        verify(recipeService,times(1)).getById(anyLong());
+        verify(recipeService,times(1)).getOneById(anyLong());
     }
 
     @Test

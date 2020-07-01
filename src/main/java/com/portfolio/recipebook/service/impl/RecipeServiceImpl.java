@@ -45,7 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public RecipeDto getById(Long recipeId) {
+    public RecipeDto getOneById(Long recipeId) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
         if (recipeOptional.isPresent()) {
             return RecipeMapper.toDto(recipeOptional.get());

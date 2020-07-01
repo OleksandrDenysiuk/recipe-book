@@ -49,9 +49,9 @@ public class StepRestController {
 
     @PutMapping("/api/recipes/{recipeId}/steps/{stepId}")
     @ResponseStatus(HttpStatus.OK)
-    public StepDto edit(@PathVariable("recipeId") Long recipeId,
-                        @PathVariable("stepId") Long stepId,
-                        @Valid StepCommand stepCommand) {
+    public StepDto update(@PathVariable("recipeId") Long recipeId,
+                          @PathVariable("stepId") Long stepId,
+                          @Valid StepCommand stepCommand) {
         stepCommand.setId(stepId);
         return stepService.update(stepCommand, recipeId);
     }

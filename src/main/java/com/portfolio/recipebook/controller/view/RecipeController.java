@@ -24,14 +24,14 @@ public class RecipeController {
     @GetMapping("/recipes/{recipeId}")
     public String recipeIndex(@PathVariable("recipeId") Long recipeId,
                              Model model) {
-        model.addAttribute("recipe", recipeService.getById(recipeId));
+        model.addAttribute("recipe", recipeService.getOneById(recipeId));
         return "recipe/index";
     }
 
     @GetMapping("/recipes/{recipeId}/form")
     public String recipeEditForm(@PathVariable("recipeId") Long recipeId,
                              Model model) {
-        model.addAttribute("recipe", recipeService.getById(recipeId));
+        model.addAttribute("recipe", recipeService.getOneById(recipeId));
         return "recipe/form";
     }
 

@@ -13,7 +13,7 @@ public interface RecipeService{
 
     void delete(Long id);
 
-    RecipeDto getById(Long recipeId);
+    RecipeDto getOneById(Long recipeId);
 
     List<RecipeDto> getAll();
 }

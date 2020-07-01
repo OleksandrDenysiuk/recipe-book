@@ -53,7 +53,7 @@ class RecipeServiceImplTest {
 
         when(recipeRepository.findById(anyLong())).thenReturn(recipe);
 
-        RecipeDto recipeDto = recipeService.getById(1L);
+        RecipeDto recipeDto = recipeService.getOneById(1L);
 
         assertNotNull(recipeDto);
         assertEquals(1, recipeDto.getId());

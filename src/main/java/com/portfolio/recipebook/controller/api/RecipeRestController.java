@@ -5,8 +5,6 @@ import com.portfolio.recipebook.dto.RecipeDto;
 import com.portfolio.recipebook.service.RecipeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,14 +26,14 @@ public class RecipeRestController {
 
     @GetMapping("/recipes")
     @ResponseStatus(HttpStatus.OK)
-    public List<RecipeDto> getRecipeList() {
+    public List<RecipeDto> getAll() {
         return recipeService.getAll();
     }
 
     @GetMapping("/recipes/{recipeId}")
     @ResponseStatus(HttpStatus.OK)
-    public RecipeDto getRecipe(@PathVariable("recipeId") Long recipeId) {
-        return recipeService.getById(recipeId);
+    public RecipeDto getOneById(@PathVariable("recipeId") Long recipeId) {
+        return recipeService.getOneById(recipeId);
     }
 
     @PostMapping("/recipes")
@@ -47,11 +45,7 @@ public class RecipeRestController {
     @PutMapping("/recipes/{recipeId}")
     @ResponseStatus(HttpStatus.OK)
     public RecipeDto update(@PathVariable("recipeId") Long recipeId,
-                            @Valid RecipeCommand recipeCommand,
-                            BindingResult result) throws BindException {
-        if (result.hasErrors()) {
-            throw new BindException(result);
-        }
+                            @Valid RecipeCommand recipeCommand){
         recipeCommand.setId(recipeId);
         return recipeService.update(recipeCommand);
     }
