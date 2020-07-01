@@ -26,7 +26,7 @@ public class IngredientRestController {
     @GetMapping("/recipes/{recipeId}/ingredients")
     @ResponseStatus(HttpStatus.OK)
     public List<IngredientDto> getIngredientList(@PathVariable("recipeId") Long recipeId) {
-        return ingredientService.getAll(recipeId);
+        return ingredientService.getAllByRecipeId(recipeId);
     }
 
     @PostMapping("/recipes/{recipeId}/ingredients")
