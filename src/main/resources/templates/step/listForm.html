@@ -16,7 +16,7 @@
             New step
         </button>
     </p>
-    <input type="hidden" id="recipeId" th:value="${recipe.id}">
+    <input type="hidden" id="recipeId" th:value="${recipeId}">
     <div class="collapse" id="collapseStepForm">
         <form id="form" method="post" enctype="multipart/form-data">
 
@@ -39,8 +39,7 @@
             </div>
         </form>
     </div>
-
-    <table th:object="${recipe}" class="table table-striped list-ingredients">
+    <table class="table table-striped list-ingredients">
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -51,15 +50,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="step : *{steps}">
+        <tr th:each="step : ${steps}">
             <th scope="row" th:text="${step.id}"></th>
             <td>
-                <img class="step-image" src="" th:data-recipe-id="${recipe.id}" th:data-step-id="${step.id}">
+                <img class="step-image" src="" th:data-recipe-id="${recipeId}" th:data-step-id="${step.id}">
             </td>
             <td th:text="${step.description}"></td>
             <td>
                 <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modalStepEdit"
-                        th:data-description="${step.description}" th:data-recipe="${recipe.id}"
+                        th:data-description="${step.description}" th:data-recipe="${recipeId}"
                         th:data-step="${step.id}">Edit
                 </button>
             </td>
@@ -67,10 +66,10 @@
         </tr>
         </tbody>
     </table>
-    <h2 class="text-muted text-center" th:if="${recipe.steps.size() == 0}">
+    <h2 class="text-muted text-center" th:if="${steps.size() == 0}">
         List is Empty
     </h2>
-    <a class="btn btn-primary mb-5" th:href="@{/recipes/__${recipe.id}__/ingredients}" role="button">Previous</a>
+    <a class="btn btn-primary mb-5" th:href="@{/recipes/__${recipeId}__/ingredients}" role="button">Previous</a>
     <a class="btn btn-primary mb-5" href="/recipes" role="button">Save recipe</a>
 </div>
 
